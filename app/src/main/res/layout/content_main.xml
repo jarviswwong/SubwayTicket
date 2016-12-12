@@ -25,6 +25,7 @@
                 android:id="@+id/content_main_originLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/area_press_selector"
                 android:gravity="start"
                 android:orientation="vertical"
                 android:paddingBottom="20dp"
@@ -33,39 +34,43 @@
                 android:paddingTop="20dp">
 
                 <TextView
+                    android:id="@+id/textView_originHint"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     android:layout_marginTop="10dp"
                     android:text="出发站"
-                    android:textColor="@color/colorGreyForText"
+                    android:textColor="@color/area_subtitlecolor_selector"
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/textView_originText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     android:layout_marginTop="10dp"
                     android:text="请选择"
+                    android:textColor="@color/area_titlecolor_selector"
                     android:textSize="20sp" />
             </LinearLayout>
 
             <ImageView
-                android:contentDescription="subwayIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:contentDescription="subwayIcon"
                 android:src="@mipmap/subway_middle_icon" />
 
             <LinearLayout
                 android:id="@+id/content_main_targetLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/area_press_selector"
                 android:gravity="end"
                 android:orientation="vertical"
                 android:paddingBottom="20dp"
-                android:paddingRight="10dp"
                 android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 android:paddingTop="20dp">
 
                 <TextView
@@ -74,7 +79,7 @@
                     android:layout_marginBottom="10dp"
                     android:layout_marginTop="10dp"
                     android:text="到达站"
-                    android:textColor="@color/colorGreyForText"
+                    android:textColor="@color/area_subtitlecolor_selector"
                     android:textSize="16sp" />
 
                 <TextView
@@ -83,6 +88,7 @@
                     android:layout_marginBottom="10dp"
                     android:layout_marginTop="10dp"
                     android:text="请选择"
+                    android:textColor="@color/area_titlecolor_selector"
                     android:textSize="20sp" />
             </LinearLayout>
         </TableRow>
@@ -191,6 +197,6 @@
         android:layout_marginTop="30dp"
         android:background="@drawable/button_press_selector"
         android:text="立即购票"
-        android:textSize="18sp"
-        android:textColor="@color/colorWhiteLight" />
+        android:textColor="@color/colorWhiteLight"
+        android:textSize="18sp" />
 </RelativeLayout>
