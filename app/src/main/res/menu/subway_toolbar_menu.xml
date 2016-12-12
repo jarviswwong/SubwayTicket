@@ -5,7 +5,7 @@
         android:id="@+id/action_infomation"
         android:orderInCategory="80"
         android:icon="@mipmap/ring"
-        android:title="infomation"
+        android:title="subway_tips"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_settings"

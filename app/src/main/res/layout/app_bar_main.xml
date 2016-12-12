@@ -24,8 +24,6 @@
                 android:text="地铁管家"
                 android:textColor="@color/colorWhiteLight"
                 android:textSize="20sp" />
-
-
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
