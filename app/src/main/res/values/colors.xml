@@ -6,4 +6,7 @@
     <color name="colorPrimary_hunt">#2772db</color>
     <color name="colorAccent_hunt">#3ab1c8</color>
     <color name="colorWhiteLight">#ffffff</color>
+    <color name="colorGreyForText">#CDCDCD</color>
+    <color name="colorRedForMoney">#FF5656</color>
+    <color name="colorBlueDarkForButtonPress">#3F72AF</color>
 </resources>
