@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/origin_station_list_refresh"
+        android:icon="@mipmap/btn_refresh"
+        android:orderInCategory="80"
+        android:title="refresh_originStationList"
+        app:showAsAction="ifRoom" />
+</menu>

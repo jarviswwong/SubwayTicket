@@ -1,5 +1,6 @@
 package cn.mcavoy.www.subwayticket;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -51,7 +52,9 @@ public class MainActivity extends AppCompatActivity
         originLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, OriginStationListActivity.class);
+                startActivity(intent);
             }
         });
 
