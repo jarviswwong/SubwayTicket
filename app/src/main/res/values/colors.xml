@@ -11,4 +11,9 @@
     <color name="colorRedForMoney">#FF5656</color>
     <color name="colorBlueDarkForButtonPress">#3F72AF</color>
     <color name="colortextColorTertiary">#8a000000</color>
+
+    <color name="side_bar_text">#4A4A4A</color>
+    <color name="shadow_bg">#66000000</color>
+    <color name="edit_bg">#EFEFF4</color>
+    <color name="darker_gray">#9b9b9b</color>
 </resources>

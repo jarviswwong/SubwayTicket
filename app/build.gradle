@@ -29,5 +29,6 @@ dependencies {
     compile 'com.android.support:design:23.4.0'
     compile 'com.timehop.stickyheadersrecyclerview:library:0.4.3'
     compile 'com.github.jiang111:IndexRecyclerView:1.0'
+    compile 'com.google.code.gson:gson:2.8.0'
     testCompile 'junit:junit:4.12'
 }
