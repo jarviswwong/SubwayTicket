@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.jiang.android.lib.adapter.expand.StickyRecyclerHeadersDecoration;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import cn.mcavoy.www.subwayticket.Pinyin.PinyinComparator;
 import cn.mcavoy.www.subwayticket.subwayListModel.StationModel;
 import cn.mcavoy.www.subwayticket.widget.DividerDecoration;
 import cn.mcavoy.www.subwayticket.widget.SideBar;
+import cn.mcavoy.www.subwayticket.widget.TouchableRecyclerView;
 import cn.mcavoy.www.subwayticket.widget.ZSideBar;
 
 public class OriginStationListActivity extends AppCompatActivity {
@@ -34,7 +36,7 @@ public class OriginStationListActivity extends AppCompatActivity {
     private SideBar mSideBar;
     private ZSideBar mZSideBar;
     private TextView mUserDialog;
-    private RecyclerView mRecyclerView;
+    private TouchableRecyclerView mRecyclerView;
 
     private List<StationModel.StationsEntity> mStations = new ArrayList<>();
     private List<StationModel.StationsEntity> mAllLists = new ArrayList<>();
@@ -43,14 +45,14 @@ public class OriginStationListActivity extends AppCompatActivity {
     private OriginStationListAdapter mAdapter;
 
     //Model
-    private StationModel mModel;
+    public StationModel mModel;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.origin_station_list_main);
-        initToolbar();
         initView();
+        initToolbar();
     }
 
     private void initView() {
@@ -59,21 +61,22 @@ public class OriginStationListActivity extends AppCompatActivity {
         mSideBar = (SideBar) findViewById(R.id.station_siderbar);
         mZSideBar = (ZSideBar) findViewById(R.id.station_zsidebar);
         mUserDialog = (TextView) findViewById(R.id.station_dialog);
-        mRecyclerView = (RecyclerView) findViewById(R.id.station_recycler_view);
+        mRecyclerView = (TouchableRecyclerView) findViewById(R.id.station_recycler_view);
         mSideBar.setTextView(mUserDialog);
-
         getData();
     }
 
-    void getData() {
+    public void getData() {
         String tempData = "[{\"id\":\"123456\",\"stationName\":\"闸弄口\",\"metroLine\":\"1\"},{\"id\":\"123333\",\"stationName\":\"火车东站西\",\"metroLine\":\"1\"},{\"id\":\"32131\",\"stationName\":\"打铁关\",\"metroLine\":\"1\"},{\"id\":\"2132131\",\"stationName\":\"九堡\",\"metroLine\":\"1\"}]";
 
         try {
-            Gson gson = new GsonBuilder().create();
-            mModel = gson.fromJson(tempData, StationModel.class);
+            Gson gson = new Gson();
+            List<StationModel.StationsEntity> stationsEntities = gson.fromJson(tempData,new TypeToken<List<StationModel.StationsEntity>>(){}.getType());
+            mModel = new StationModel();
+            mModel.setStationsEntities(stationsEntities);
             initUi();
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -100,11 +103,9 @@ public class OriginStationListActivity extends AppCompatActivity {
             mRecyclerView.addItemDecoration(new DividerDecoration(this));
 
             //   setTouchHelper();
-            mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver()
-            {
+            mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
                 @Override
-                public void onChanged()
-                {
+                public void onChanged() {
                     headersDecor.invalidateHeaders();
                 }
             });
@@ -167,7 +168,7 @@ public class OriginStationListActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.menu_zsidebar) {
             mZSideBar.setVisibility(View.VISIBLE);
             mSideBar.setVisibility(View.GONE);
-        }else {
+        } else {
             mZSideBar.setVisibility(View.GONE);
             mSideBar.setVisibility(View.VISIBLE);
         }
