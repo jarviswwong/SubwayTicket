@@ -67,11 +67,19 @@ public class OriginStationListActivity extends AppCompatActivity {
     }
 
     public void getData() {
-        String tempData = "[{\"id\":\"123456\",\"stationName\":\"闸弄口\",\"metroLine\":\"1\"},{\"id\":\"123333\",\"stationName\":\"火车东站西\",\"metroLine\":\"1\"},{\"id\":\"32131\",\"stationName\":\"打铁关\",\"metroLine\":\"1\"},{\"id\":\"2132131\",\"stationName\":\"九堡\",\"metroLine\":\"1\"}]";
+        String tempData = "[{\"id\":\"123456\",\"stationName\":\"闸弄口\",\"metroLine\":\"1\"}," +
+                "{\"id\":\"123333\",\"stationName\":\"火车东站\",\"metroLine\":\"4\"}," +
+                "{\"id\":\"32131\",\"stationName\":\"打铁关\",\"metroLine\":\"1\"}," +
+                "{\"id\":\"2132131\",\"stationName\":\"九堡\",\"metroLine\":\"1\"}," +
+                "{\"id\":\"2323\",\"stationName\":\"湘湖\",\"metroLine\":\"1\"}," +
+                "{\"id\":\"2132131\",\"stationName\":\"江陵路\",\"metroLine\":\"1\"}," +
+                "{\"id\":\"2132131\",\"stationName\":\"近江\",\"metroLine\":\"4\"}," +
+                "{\"id\":\"2132131\",\"stationName\":\"龙翔桥\",\"metroLine\":\"1\"}]";
 
         try {
             Gson gson = new Gson();
-            List<StationModel.StationsEntity> stationsEntities = gson.fromJson(tempData,new TypeToken<List<StationModel.StationsEntity>>(){}.getType());
+            List<StationModel.StationsEntity> stationsEntities = gson.fromJson(tempData, new TypeToken<List<StationModel.StationsEntity>>() {
+            }.getType());
             mModel = new StationModel();
             mModel.setStationsEntities(stationsEntities);
             initUi();

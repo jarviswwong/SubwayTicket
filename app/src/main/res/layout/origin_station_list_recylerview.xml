@@ -5,11 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="48dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
+            android:layout_alignParentStart="true"
             android:id="@+id/item_station_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -18,7 +19,20 @@
             android:text="标题"
             android:textColor="@android:color/black"
             android:textSize="18sp" />
-    </LinearLayout>
+
+        <TextView
+            android:layout_alignParentEnd="true"
+            android:id="@+id/item_station_metroLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:textSize="15sp"
+            android:text="1"
+            android:background="@drawable/design_metroline"
+            android:textColor="@color/colorWhiteLight"/>
+    </RelativeLayout>
 
 </LinearLayout>
 

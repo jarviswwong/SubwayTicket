@@ -41,8 +41,10 @@ public class OriginStationListAdapter extends BaseAdapter<StationModel.StationsE
 
     @Override
     public void onBindViewHolder(OriginStationListAdapter.ViewHolder holder, final int position) {
-        TextView textView = holder.mStationName;
-        textView.setText(getItem(position).getStationName());
+        TextView stationNameTextView = holder.mStationName;
+        TextView metroLineTextView = holder.mMetroLine;
+        stationNameTextView.setText(getItem(position).getStationName());
+        metroLineTextView.setText(getItem(position).getMetroLine());
     }
 
     @Override
@@ -87,10 +89,12 @@ public class OriginStationListAdapter extends BaseAdapter<StationModel.StationsE
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView mStationName;
+        public TextView mMetroLine;
 
         public ViewHolder(View itemView) {
             super(itemView);
             mStationName = (TextView) itemView.findViewById(R.id.item_station_name);
+            mMetroLine = (TextView) itemView.findViewById(R.id.item_station_metroLine);
         }
     }
 
