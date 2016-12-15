@@ -1,8 +1,7 @@
-package cn.mcavoy.www.subwayticket;
+package cn.mcavoy.www.subwayticket.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,36 +14,63 @@ import com.jiang.android.lib.widget.SwipeItemLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.mcavoy.www.subwayticket.R;
 import cn.mcavoy.www.subwayticket.subwayListModel.StationModel;
 import cn.mcavoy.www.subwayticket.widget.IndexAdapter;
 
 
-public class OriginStationListAdapter extends BaseAdapter<StationModel.StationsEntity, OriginStationListAdapter.ViewHolder>
-        implements StickyRecyclerHeadersAdapter<RecyclerView.ViewHolder>, IndexAdapter {
+public class StationListAdapter extends BaseAdapter<StationModel.StationsEntity, StationListAdapter.ViewHolder>
+        implements StickyRecyclerHeadersAdapter<RecyclerView.ViewHolder>, IndexAdapter, View.OnClickListener {
 
     //当前处于打开状态的item
     private List<SwipeItemLayout> mOpenedSil = new ArrayList<>();
     private List<StationModel.StationsEntity> mLists;
     private Context mContext;
 
-    public OriginStationListAdapter(Context ct, List<StationModel.StationsEntity> mLists) {
+    //声明接口变量
+    private OnRecyclerViewItemListener mOnItemClickListener = null;
+
+    //这里重写OnClickListenerd的方法
+    @Override
+    public void onClick(View v) {
+        if (mOnItemClickListener != null) {
+            mOnItemClickListener.onItemClick(v, (StationModel.StationsEntity) v.getTag());
+        }
+    }
+
+    //定义一个点击事件的接口
+    public static interface OnRecyclerViewItemListener {
+        void onItemClick(View view, StationModel.StationsEntity stationsEntity);
+    }
+
+    //定义一个方法给外部用
+    public void setmOnItemClickListener(OnRecyclerViewItemListener listener){
+        this.mOnItemClickListener = listener;
+    }
+
+    public StationListAdapter(Context ct, List<StationModel.StationsEntity> mLists) {
         this.mLists = mLists;
         mContext = ct;
         this.addAll(mLists);
     }
 
     @Override
-    public OriginStationListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.origin_station_list_recylerview, parent, false);
+    public StationListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.station_list_recylerview, parent, false);
+
+        //添加点击事件
+        view.setOnClickListener(this);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(OriginStationListAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(StationListAdapter.ViewHolder holder, final int position) {
         TextView stationNameTextView = holder.mStationName;
         TextView metroLineTextView = holder.mMetroLine;
         stationNameTextView.setText(getItem(position).getStationName());
         metroLineTextView.setText(getItem(position).getMetroLine() + "号线");
+
+        holder.itemView.setTag(mLists.get(position));
     }
 
     @Override
@@ -55,7 +81,7 @@ public class OriginStationListAdapter extends BaseAdapter<StationModel.StationsE
     @Override
     public RecyclerView.ViewHolder onCreateHeaderViewHolder(ViewGroup viewGroup) {
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.origin_station_list_header, viewGroup, false);
+                .inflate(R.layout.station_list_header, viewGroup, false);
         return new RecyclerView.ViewHolder(view) {
         };
     }

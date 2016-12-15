@@ -19,7 +19,7 @@
         </activity>
 
         <activity
-            android:name=".OriginStationListActivity"
+            android:name=".StationListActivity"
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>

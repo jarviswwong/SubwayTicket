@@ -2,26 +2,26 @@ package cn.mcavoy.www.subwayticket;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.jiang.android.lib.adapter.expand.StickyRecyclerHeadersDecoration;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import cn.mcavoy.www.subwayticket.Adapter.StationListAdapter;
 import cn.mcavoy.www.subwayticket.Pinyin.CharacterParser;
 import cn.mcavoy.www.subwayticket.Pinyin.PinyinComparator;
 import cn.mcavoy.www.subwayticket.subwayListModel.StationModel;
@@ -30,7 +30,7 @@ import cn.mcavoy.www.subwayticket.widget.SideBar;
 import cn.mcavoy.www.subwayticket.widget.TouchableRecyclerView;
 import cn.mcavoy.www.subwayticket.widget.ZSideBar;
 
-public class OriginStationListActivity extends AppCompatActivity {
+public class StationListActivity extends AppCompatActivity {
     private CharacterParser characterParser;
     private PinyinComparator pinyinComparator;
     private SideBar mSideBar;
@@ -42,17 +42,39 @@ public class OriginStationListActivity extends AppCompatActivity {
     private List<StationModel.StationsEntity> mAllLists = new ArrayList<>();
 
     //Adapter
-    private OriginStationListAdapter mAdapter;
+    private StationListAdapter mAdapter;
 
     //Model
     public StationModel mModel;
 
+    private TextView stationListTitle;
+
+    //Choose Type 0:起点站 / 1:终点站
+    private int chooseType = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.origin_station_list_main);
+        setContentView(R.layout.station_list_main);
         initView();
         initToolbar();
+        getDataFromActivity();
+    }
+
+
+    private void getDataFromActivity() {
+        stationListTitle = (TextView) findViewById(R.id.station_list_title);
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        if (bundle != null) {
+            chooseType = bundle.getInt("chooseType");
+        }
+        if (chooseType == 0) {
+            stationListTitle.setText("选择出发站");
+        }
+        if (chooseType == 1) {
+            stationListTitle.setText("选择到达站");
+        }
     }
 
     private void initView() {
@@ -101,7 +123,7 @@ public class OriginStationListActivity extends AppCompatActivity {
         //use seperateLists model
         seperateLists(mModel);
         if (mAdapter == null) {
-            mAdapter = new OriginStationListAdapter(this, mAllLists);
+            mAdapter = new StationListAdapter(this, mAllLists);
             int orientation = LinearLayoutManager.VERTICAL;
             final LinearLayoutManager layoutManager = new LinearLayoutManager(this, orientation, false);
             mRecyclerView.setLayoutManager(layoutManager);
@@ -120,6 +142,17 @@ public class OriginStationListActivity extends AppCompatActivity {
         } else {
             mAdapter.notifyDataSetChanged();
         }
+        //设置每一个item的点击事件
+        mAdapter.setmOnItemClickListener(new StationListAdapter.OnRecyclerViewItemListener() {
+            @Override
+            public void onItemClick(View view, StationModel.StationsEntity stationsEntity) {
+                Intent intent = new Intent();
+                intent.setClass(StationListActivity.this, MainActivity.class);
+                intent.putExtra("StationName", stationsEntity.getStationName());
+                setResult(chooseType,intent);
+                finish();
+            }
+        });
         mZSideBar.setupWithRecycler(mRecyclerView);
     }
 
@@ -157,8 +190,7 @@ public class OriginStationListActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.setClass(OriginStationListActivity.this, MainActivity.class);
-                startActivity(intent);
+                setResult(-1,intent);
                 finish();
             }
         });
@@ -167,7 +199,7 @@ public class OriginStationListActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.origin_station_list_menu, menu);
+        getMenuInflater().inflate(R.menu.station_list_menu, menu);
         return true;
     }
 

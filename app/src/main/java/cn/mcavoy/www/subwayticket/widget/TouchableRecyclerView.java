@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 
-import cn.mcavoy.www.subwayticket.OriginStationListAdapter;
+import cn.mcavoy.www.subwayticket.Adapter.StationListAdapter;
 
 public class TouchableRecyclerView extends RecyclerView {
 
@@ -67,6 +67,6 @@ public class TouchableRecyclerView extends RecyclerView {
 
     public void closeAllOpenedItem() {
         if (getAdapter() != null)
-            ((OriginStationListAdapter) getAdapter()).closeOpenedSwipeItemLayoutWithAnim();
+            ((StationListAdapter) getAdapter()).closeOpenedSwipeItemLayoutWithAnim();
     }
 }
