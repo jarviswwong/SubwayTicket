@@ -173,13 +173,7 @@ public class OriginStationListActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_zsidebar) {
-            mZSideBar.setVisibility(View.VISIBLE);
-            mSideBar.setVisibility(View.GONE);
-        } else {
-            mZSideBar.setVisibility(View.GONE);
-            mSideBar.setVisibility(View.VISIBLE);
-        }
+
         return false;
     }
 }

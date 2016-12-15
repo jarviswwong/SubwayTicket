@@ -44,7 +44,7 @@ public class OriginStationListAdapter extends BaseAdapter<StationModel.StationsE
         TextView stationNameTextView = holder.mStationName;
         TextView metroLineTextView = holder.mMetroLine;
         stationNameTextView.setText(getItem(position).getStationName());
-        metroLineTextView.setText(getItem(position).getMetroLine());
+        metroLineTextView.setText(getItem(position).getMetroLine() + "号线");
     }
 
     @Override
