@@ -1,41 +1,38 @@
 package cn.mcavoy.www.subwayticket;
 
-import android.content.Intent;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
-import android.view.View;
+import android.app.FragmentManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.view.ViewGroup;
+
+import cn.mcavoy.www.subwayticket.Fragment.FragmentMain;
+import cn.mcavoy.www.subwayticket.Fragment.FragmentUserSetting;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private View originLayout, targetLayout;
-    private TextView originText, targetText;
+    private FragmentMain fragmentMain;
+    private FragmentUserSetting fragmentUserSetting;
 
-    String originStationName = "请选择", targetStationName = "请选择";  //记录用户选择
+    private Fragment isFragment; //记录当前的fragment
+
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        originLayout = findViewById(R.id.content_main_originLayout);
-        targetLayout = findViewById(R.id.content_main_targetLayout);
-        originText = (TextView) findViewById(R.id.textView_originText);
-        targetText = (TextView) findViewById(R.id.textView_targetText);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("");
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("首页");
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -48,54 +45,22 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
 
-        //出发站选择击事件
-        originLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(MainActivity.this, StationListActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("chooseType", 0);
-                intent.putExtras(bundle);
-                startActivityForResult(intent, 0);
-            }
-        });
+        ViewGroup.LayoutParams params = navigationView.getLayoutParams();
+        params.width = getResources().getDisplayMetrics().widthPixels * 7 / 10;
+        navigationView.setLayoutParams(params);
 
-        //到达站点击事件
-        targetLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(MainActivity.this, StationListActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("chooseType", 1);
-                intent.putExtras(bundle);
-                startActivityForResult(intent, 1);
-            }
-        });
+        setDefaultFragment(savedInstanceState);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (resultCode) {
-            case -1: {
-                break;
-            }
-            case 0: {
-                Bundle b = data.getExtras();
-                originStationName = b.getString("StationName");
-                originText.setText(originStationName);
-                break;
-            }
-            case 1: {
-                Bundle b = data.getExtras();
-                targetStationName = b.getString("StationName");
-                targetText.setText(targetStationName);
-                break;
-            }
-            default:
-                break;
+    public void setDefaultFragment(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            if (fragmentMain == null)
+                fragmentMain = new FragmentMain();
+            isFragment = fragmentMain;
+            transaction.replace(R.id.fragment_layout, fragmentMain);
+            transaction.commit();
         }
     }
 
@@ -110,39 +75,29 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.subway_toolbar_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        switch (id){
-            case R.id.nav_index:{
-
+        switch (id) {
+            case R.id.nav_index: {
+                toolbar.setTitle("首页");
+                if (fragmentMain == null)
+                    fragmentMain = new FragmentMain();
+                switchContent(isFragment, fragmentMain);
                 break;
             }
+            case R.id.nav_user: {
+                toolbar.setTitle("账户设置");
+                if (fragmentUserSetting == null)
+                    fragmentUserSetting = new FragmentUserSetting();
+                switchContent(isFragment, fragmentUserSetting);
+                break;
+            }
+            default:
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -150,20 +105,18 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    //用onSaveInstanceState短暂保存数据
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-        Log.d("use save", "saving!");
-        outState.putString("originStationName", originStationName);
-        outState.putString("targetStationName", targetStationName);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        originStationName = savedInstanceState.get("originStationName").toString();
-        targetStationName = savedInstanceState.get("targetStationName").toString();
+    //用更优化的方法来切换fragment
+    private void switchContent(Fragment from, Fragment to) {
+        if (isFragment != to) {
+            isFragment = to;
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            if (!to.isAdded()) {
+                ft.hide(from).add(R.id.fragment_layout, to).commit();
+            } else {
+                ft.hide(from).show(to).commit();
+            }
+        }
     }
 
 }
