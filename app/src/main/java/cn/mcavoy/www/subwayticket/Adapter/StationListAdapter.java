@@ -2,6 +2,7 @@ package cn.mcavoy.www.subwayticket.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 import com.jiang.android.lib.adapter.BaseAdapter;
 import com.jiang.android.lib.adapter.expand.StickyRecyclerHeadersAdapter;
 import com.jiang.android.lib.widget.SwipeItemLayout;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +47,7 @@ public class StationListAdapter extends BaseAdapter<StationModel.StationsEntity,
     }
 
     //定义一个方法给外部用
-    public void setmOnItemClickListener(OnRecyclerViewItemListener listener){
+    public void setmOnItemClickListener(OnRecyclerViewItemListener listener) {
         this.mOnItemClickListener = listener;
     }
 
@@ -67,8 +70,13 @@ public class StationListAdapter extends BaseAdapter<StationModel.StationsEntity,
     public void onBindViewHolder(StationListAdapter.ViewHolder holder, final int position) {
         TextView stationNameTextView = holder.mStationName;
         TextView metroLineTextView = holder.mMetroLine;
+        TextView metroLineSecondTextView = holder.mMetroLineSecond;
         stationNameTextView.setText(getItem(position).getStationName());
         metroLineTextView.setText(getItem(position).getMetroLine() + "号线");
+        if (!getItem(position).getMetroLineSecond().equals("")) {
+            metroLineSecondTextView.setVisibility(View.VISIBLE);
+            metroLineSecondTextView.setText(getItem(position).getMetroLineSecond() + "号线");
+        }
 
         holder.itemView.setTag(mLists.get(position));
     }
@@ -116,11 +124,13 @@ public class StationListAdapter extends BaseAdapter<StationModel.StationsEntity,
 
         public TextView mStationName;
         public TextView mMetroLine;
+        public TextView mMetroLineSecond;
 
         public ViewHolder(View itemView) {
             super(itemView);
             mStationName = (TextView) itemView.findViewById(R.id.item_station_name);
             mMetroLine = (TextView) itemView.findViewById(R.id.item_station_metroLine);
+            mMetroLineSecond = (TextView) itemView.findViewById(R.id.item_station_metroLineSecond);
         }
     }
 

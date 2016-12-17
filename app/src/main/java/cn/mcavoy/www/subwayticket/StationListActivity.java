@@ -89,14 +89,14 @@ public class StationListActivity extends AppCompatActivity {
     }
 
     public void getData() {
-        String tempData = "[{\"id\":\"123456\",\"stationName\":\"闸弄口\",\"metroLine\":\"1\"}," +
-                "{\"id\":\"123333\",\"stationName\":\"火车东站\",\"metroLine\":\"4\"}," +
-                "{\"id\":\"32131\",\"stationName\":\"打铁关\",\"metroLine\":\"1\"}," +
-                "{\"id\":\"2132131\",\"stationName\":\"九堡\",\"metroLine\":\"1\"}," +
-                "{\"id\":\"2323\",\"stationName\":\"湘湖\",\"metroLine\":\"1\"}," +
-                "{\"id\":\"2132131\",\"stationName\":\"江陵路\",\"metroLine\":\"1\"}," +
-                "{\"id\":\"2132131\",\"stationName\":\"近江\",\"metroLine\":\"4\"}," +
-                "{\"id\":\"2132131\",\"stationName\":\"龙翔桥\",\"metroLine\":\"1\"}]";
+        String tempData = "[{\"id\":\"123456\",\"stationName\":\"闸弄口\",\"metroLine\":\"1\",\"metroLineSecond\":\"\"}," +
+                "{\"id\":\"123333\",\"stationName\":\"火车东站\",\"metroLine\":\"1\",\"metroLineSecond\":\"4\"}," +
+                "{\"id\":\"32131\",\"stationName\":\"打铁关\",\"metroLine\":\"1\",\"metroLineSecond\":\"\"}," +
+                "{\"id\":\"2132131\",\"stationName\":\"九堡\",\"metroLine\":\"1\",\"metroLineSecond\":\"\"}," +
+                "{\"id\":\"2323\",\"stationName\":\"湘湖\",\"metroLine\":\"1\",\"metroLineSecond\":\"\"}," +
+                "{\"id\":\"2132131\",\"stationName\":\"江陵路\",\"metroLine\":\"1\",\"metroLineSecond\":\"\"}," +
+                "{\"id\":\"2132131\",\"stationName\":\"近江\",\"metroLine\":\"4\",\"metroLineSecond\":\"\"}," +
+                "{\"id\":\"2132131\",\"stationName\":\"龙翔桥\",\"metroLine\":\"1\",\"metroLineSecond\":\"\"}]";
 
         try {
             Gson gson = new Gson();
@@ -127,6 +127,7 @@ public class StationListActivity extends AppCompatActivity {
             int orientation = LinearLayoutManager.VERTICAL;
             final LinearLayoutManager layoutManager = new LinearLayoutManager(this, orientation, false);
             mRecyclerView.setLayoutManager(layoutManager);
+            mRecyclerView.setHasFixedSize(true);
             mRecyclerView.setAdapter(mAdapter);
             final StickyRecyclerHeadersDecoration headersDecor = new StickyRecyclerHeadersDecoration(mAdapter);
             mRecyclerView.addItemDecoration(headersDecor);
@@ -149,7 +150,7 @@ public class StationListActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.setClass(StationListActivity.this, MainActivity.class);
                 intent.putExtra("StationName", stationsEntity.getStationName());
-                setResult(chooseType,intent);
+                setResult(chooseType, intent);
                 finish();
             }
         });
@@ -164,6 +165,7 @@ public class StationListActivity extends AppCompatActivity {
                 entity.setId(mModel.getStationsEntities().get(i).getId());
                 entity.setStationName(mModel.getStationsEntities().get(i).getStationName());
                 entity.setMetroLine(mModel.getStationsEntities().get(i).getMetroLine());
+                entity.setMetroLineSecond(mModel.getStationsEntities().get(i).getMetroLineSecond());
                 String pinyin = characterParser.getSelling(mModel.getStationsEntities().get(i).getStationName());
                 String sortString = pinyin.substring(0, 1).toUpperCase();
 
@@ -190,7 +192,7 @@ public class StationListActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                setResult(-1,intent);
+                setResult(-1, intent);
                 finish();
             }
         });

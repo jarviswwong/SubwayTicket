@@ -86,23 +86,24 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (resultCode){
-            case -1:{
+        switch (resultCode) {
+            case -1: {
                 break;
             }
-            case 0:{
+            case 0: {
                 Bundle b = data.getExtras();
                 originStationName = b.getString("StationName");
                 originText.setText(originStationName);
                 break;
             }
-            case 1:{
+            case 1: {
                 Bundle b = data.getExtras();
                 targetStationName = b.getString("StationName");
                 targetText.setText(targetStationName);
                 break;
             }
-            default:break;
+            default:
+                break;
         }
     }
 
@@ -164,6 +165,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    //用onSaveInstanceState短暂保存数据
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);

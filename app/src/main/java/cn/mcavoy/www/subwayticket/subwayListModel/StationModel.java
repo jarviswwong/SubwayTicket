@@ -26,6 +26,8 @@ public class StationModel {
 
         private String metroLine;
 
+        private String metroLineSecond;
+
         public String getSortLetters() {
             return sortLetters;
         }
@@ -53,6 +55,10 @@ public class StationModel {
             this.metroLine = metroLine;
         }
 
+        public void setMetroLineSecond(String metroLineSecond) {
+            this.metroLineSecond = metroLineSecond;
+        }
+
         public String getId() {
             return id;
         }
@@ -63,6 +69,10 @@ public class StationModel {
 
         public String getMetroLine() {
             return metroLine;
+        }
+
+        public String getMetroLineSecond() {
+            return metroLineSecond;
         }
     }
 }

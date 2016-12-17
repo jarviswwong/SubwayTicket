@@ -4,8 +4,8 @@
     <solid android:color="@color/colorRedForMoney" />
     <padding
         android:bottom="1dp"
-        android:left="15dp"
-        android:right="15dp"
+        android:left="10dp"
+        android:right="10dp"
         android:top="1dp" />
 
     <stroke
