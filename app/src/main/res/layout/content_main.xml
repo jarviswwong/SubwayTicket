@@ -124,16 +124,18 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/ticket_num_cut"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center"
                 android:background="@mipmap/ticket_num_cut" />
 
-            <EditText
+            <TextView
+                android:id="@+id/ticket_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:enabled="false"
-                android:hint="1"
+                android:text="1"
+                android:textSize="17sp"
                 android:paddingBottom="5dp"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
@@ -141,6 +143,7 @@
                 android:textAlignment="center" />
 
             <Button
+                android:id="@+id/ticket_num_add"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center"

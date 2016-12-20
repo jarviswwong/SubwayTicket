@@ -30,5 +30,7 @@ dependencies {
     compile 'com.timehop.stickyheadersrecyclerview:library:0.4.3'
     compile 'com.github.jiang111:IndexRecyclerView:1.0'
     compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.rengwuxian.materialedittext:library:2.1.4'
+    compile 'com.yanzhenjie.nohttp:okhttp:1.1.0'
     testCompile 'junit:junit:4.12'
 }

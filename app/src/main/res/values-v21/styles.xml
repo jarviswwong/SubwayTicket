@@ -4,7 +4,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@color/colorPrimary_hunt</item>
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -12,6 +12,11 @@
         <item name="colorPrimary">@color/colorPrimary_hunt</item>
         <item name="colorPrimaryDark">@color/colorPrimary_hunt</item>
         <item name="colorAccent">@color/colorAccent_hunt</item>
-        <item name="android:statusBarColor">@android:color/holo_red_light</item>
+        <item name="android:statusBarColor">@color/colorPrimary_hunt</item>
+    </style>
+
+    <style name="LoginNoActionBar" parent="AppTheme.NoActionBar">
+
+        <item name="android:statusBarColor">@android:color/background_light</item>
     </style>
 </resources>

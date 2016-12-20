@@ -2,6 +2,9 @@ package cn.mcavoy.www.subwayticket;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.FragmentManager;
 import android.support.design.widget.NavigationView;
@@ -13,7 +16,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
+import cn.mcavoy.www.subwayticket.Application.MetroApplication;
 import cn.mcavoy.www.subwayticket.Fragment.FragmentMain;
+import cn.mcavoy.www.subwayticket.Fragment.FragmentTicketHistory;
 import cn.mcavoy.www.subwayticket.Fragment.FragmentUserSetting;
 
 public class MainActivity extends AppCompatActivity
@@ -21,6 +26,7 @@ public class MainActivity extends AppCompatActivity
 
     private FragmentMain fragmentMain;
     private FragmentUserSetting fragmentUserSetting;
+    private FragmentTicketHistory fragmentTicketHistory;
 
     private Fragment isFragment; //记录当前的fragment
 
@@ -89,11 +95,29 @@ public class MainActivity extends AppCompatActivity
                 switchContent(isFragment, fragmentMain);
                 break;
             }
+            case R.id.nav_purchase_history: {
+                toolbar.setTitle("购票记录");
+                if (fragmentTicketHistory == null)
+                    fragmentTicketHistory = new FragmentTicketHistory();
+                switchContent(isFragment, fragmentTicketHistory);
+                break;
+            }
             case R.id.nav_user: {
                 toolbar.setTitle("账户设置");
                 if (fragmentUserSetting == null)
                     fragmentUserSetting = new FragmentUserSetting();
                 switchContent(isFragment, fragmentUserSetting);
+                break;
+            }
+            case R.id.nav_sign_out: {
+                SharedPreferences sp = getSharedPreferences("user_validate", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.clear();
+                editor.commit();
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
                 break;
             }
             default:

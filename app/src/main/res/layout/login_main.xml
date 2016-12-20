@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhiteLight"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/subway_manager_logo"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="50dp"
+            android:src="@mipmap/subwaymanager_logo" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="地铁管家"
+        android:textColor="@color/colorPrimary_hunt"
+        android:textSize="30sp" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/login_textField_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="40dp"
+        android:inputType="textEmailAddress"
+        android:hint="请输入邮箱地址"
+        android:textSize="16sp"
+        app:met_clearButton="true"
+        app:met_iconLeft="@mipmap/user" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/login_textField_pass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="10dp"
+        android:hint="请输入密码"
+        android:inputType="textPassword"
+        android:textSize="16sp"
+        app:met_clearButton="true"
+        app:met_iconLeft="@mipmap/password" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center_vertical|end"
+        android:text="忘记密码?" />
+
+    <Button
+        android:id="@+id/btn_signIn"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/design_login_button"
+        android:drawablePadding="-22dp"
+        android:drawableEnd="@mipmap/right"
+        android:text="登录"
+        android:textColor="@color/colorWhiteLight"
+        android:textSize="18sp" />
+
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:stretchColumns="0,1">
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center|end"
+                android:text="没有账户？"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center|start"
+                android:text="现在创建"
+                android:textColor="#2794EB"
+                android:textSize="16sp" />
+
+        </TableRow>
+    </TableLayout>
+
+
+</LinearLayout>

@@ -13,6 +13,10 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <style name="LoginNoActionBar" parent="AppTheme.NoActionBar">
+
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.AppBarNoOverlay" parent="Theme.AppCompat.Light.DarkActionBar"></style>
