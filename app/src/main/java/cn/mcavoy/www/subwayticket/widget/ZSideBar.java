@@ -13,6 +13,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import cn.mcavoy.www.subwayticket.R;
 
@@ -26,6 +27,11 @@ public class ZSideBar extends View
   private int offsetY;
   private int singleHeight;
 
+  private TextView mTextDialog;
+
+  public void setTextView(TextView mTextDialog) {
+    this.mTextDialog = mTextDialog;
+  }
 
   public ZSideBar(Context context)
   {
@@ -114,14 +120,21 @@ public class ZSideBar extends View
         setBackgroundColor(0x00000000);
         choose = -1;
         invalidate();
+        if (mTextDialog != null) {
+          mTextDialog.setVisibility(View.INVISIBLE);
+        }
         break;
 
       default:
-        setBackgroundColor(0x66000000);
+        setBackgroundColor(getResources().getColor(R.color.sider_backgroud));
         if (oldChoose != c) {
           if (c >= 0 && c < indexMap.size()) {
             int position = indexMap.keyAt(c);
             recyclerView.getLayoutManager().scrollToPosition(position);
+            if (mTextDialog != null) {
+              mTextDialog.setText(indexMap.get(indexMap.keyAt(c)));
+              mTextDialog.setVisibility(View.VISIBLE);
+            }
             choose = c;
             invalidate();
           }
@@ -163,7 +176,7 @@ public class ZSideBar extends View
         // 选中的状态
         paint.setFakeBoldText(true);
         paint.setTextSize(dp24);
-        canvas.drawText(indexMap.get(indexMap.keyAt(i)), dip2px(-56), yPos, paint);
+        //canvas.drawText(indexMap.get(indexMap.keyAt(i)), dip2px(-56), yPos, paint);
         paint.setTextSize(dp12);
       }
       // x坐标等于中间-字符串宽度的一半.

@@ -76,6 +76,8 @@ public class StationListAdapter extends BaseAdapter<StationModel.StationsEntity,
         if (!getItem(position).getMetroLineSecond().equals("")) {
             metroLineSecondTextView.setVisibility(View.VISIBLE);
             metroLineSecondTextView.setText(getItem(position).getMetroLineSecond() + "号线");
+        } else {
+            metroLineSecondTextView.setVisibility(View.GONE);
         }
 
         holder.itemView.setTag(mLists.get(position));

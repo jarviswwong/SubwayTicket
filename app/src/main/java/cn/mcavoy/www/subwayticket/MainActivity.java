@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity
     private Fragment isFragment; //记录当前的fragment
 
     private Toolbar toolbar;
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,5 +142,6 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
+
 
 }

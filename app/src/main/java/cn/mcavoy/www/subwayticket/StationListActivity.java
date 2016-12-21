@@ -11,18 +11,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.jiang.android.lib.adapter.expand.StickyRecyclerHeadersDecoration;
-
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import cn.mcavoy.www.subwayticket.Adapter.StationListAdapter;
+import cn.mcavoy.www.subwayticket.Application.MetroApplication;
 import cn.mcavoy.www.subwayticket.Pinyin.CharacterParser;
 import cn.mcavoy.www.subwayticket.Pinyin.PinyinComparator;
 import cn.mcavoy.www.subwayticket.subwayListModel.StationModel;
@@ -86,21 +85,27 @@ public class StationListActivity extends AppCompatActivity {
         mUserDialog = (TextView) findViewById(R.id.station_dialog);
         mRecyclerView = (TouchableRecyclerView) findViewById(R.id.station_recycler_view);
         mSideBar.setTextView(mUserDialog);
+        mZSideBar.setTextView(mUserDialog);
         getData();
     }
 
     public void getData() {
-        String tempData = "[{\"id\":\"123456\",\"stationName\":\"闸弄口\",\"metroLine\":\"1\",\"metroLineSecond\":\"\"}," +
-                "{\"id\":\"123333\",\"stationName\":\"火车东站\",\"metroLine\":\"1\",\"metroLineSecond\":\"4\"}," +
-                "{\"id\":\"32131\",\"stationName\":\"打铁关\",\"metroLine\":\"1\",\"metroLineSecond\":\"\"}," +
-                "{\"id\":\"2132131\",\"stationName\":\"九堡\",\"metroLine\":\"1\",\"metroLineSecond\":\"\"}," +
-                "{\"id\":\"2323\",\"stationName\":\"湘湖\",\"metroLine\":\"1\",\"metroLineSecond\":\"\"}," +
-                "{\"id\":\"2132131\",\"stationName\":\"江陵路\",\"metroLine\":\"1\",\"metroLineSecond\":\"\"}," +
-                "{\"id\":\"2132131\",\"stationName\":\"近江\",\"metroLine\":\"4\",\"metroLineSecond\":\"\"}," +
-                "{\"id\":\"2132131\",\"stationName\":\"龙翔桥\",\"metroLine\":\"1\",\"metroLineSecond\":\"\"}]";
+//        String tempData = "[{\"id\":\"123456\",\"stationName\":\"闸弄口\",\"metroLine\":\"1\",\"metroLineSecond\":\"\"}," +
+//                "{\"id\":\"123333\",\"stationName\":\"火车东站\",\"metroLine\":\"1\",\"metroLineSecond\":\"4\"}," +
+//                "{\"id\":\"32131\",\"stationName\":\"打铁关\",\"metroLine\":\"1\",\"metroLineSecond\":\"\"}," +
+//                "{\"id\":\"2132131\",\"stationName\":\"九堡\",\"metroLine\":\"1\",\"metroLineSecond\":\"\"}," +
+//                "{\"id\":\"2323\",\"stationName\":\"湘湖\",\"metroLine\":\"1\",\"metroLineSecond\":\"\"}," +
+//                "{\"id\":\"2132131\",\"stationName\":\"江陵路\",\"metroLine\":\"1\",\"metroLineSecond\":\"\"}," +
+//                "{\"id\":\"2132131\",\"stationName\":\"近江\",\"metroLine\":\"4\",\"metroLineSecond\":\"\"}," +
+//                "{\"id\":\"2132131\",\"stationName\":\"龙翔桥\",\"metroLine\":\"1\",\"metroLineSecond\":\"\"}," +
+//                "{\"id\":\"2132131\",\"stationName\":\"婺江路\",\"metroLine\":\"1\",\"metroLineSecond\":\"\"}]";
+
+        String tempData = MetroApplication.tempData;
+        if (tempData.equals(""))
+            Toast.makeText(getBaseContext(), "读取车站数据失败，请检查网络设置!", Toast.LENGTH_SHORT).show();
 
         try {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().create();
             List<StationModel.StationsEntity> stationsEntities = gson.fromJson(tempData, new TypeToken<List<StationModel.StationsEntity>>() {
             }.getType());
             mModel = new StationModel();

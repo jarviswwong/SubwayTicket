@@ -16,6 +16,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.yolanda.nohttp.NoHttp;
+import com.yolanda.nohttp.rest.CacheMode;
+import com.yolanda.nohttp.rest.OnResponseListener;
+import com.yolanda.nohttp.rest.Request;
+import com.yolanda.nohttp.rest.RequestQueue;
+import com.yolanda.nohttp.rest.Response;
+import com.yolanda.nohttp.rest.StringRequest;
+
+import cn.mcavoy.www.subwayticket.Application.MetroApplication;
 import cn.mcavoy.www.subwayticket.R;
 import cn.mcavoy.www.subwayticket.StationListActivity;
 
@@ -26,6 +35,10 @@ public class FragmentMain extends Fragment {
     private Button ticketAdd, ticketCut, bookTicket;
 
     String originStationName = "请选择", targetStationName = "请选择";  //记录用户选择
+
+    //http
+    private String getStationApi = "http://10.0.2.2/api/stations";
+    private RequestQueue queue;
 
     @Nullable
     @Override
@@ -39,6 +52,10 @@ public class FragmentMain extends Fragment {
         ticketAdd = (Button) view.findViewById(R.id.ticket_num_add);
         ticketCut = (Button) view.findViewById(R.id.ticket_num_cut);
         bookTicket = (Button) view.findViewById(R.id.button_startBookTicket);
+
+        //提前初始化站台list缓存 加快加载速度
+        queue = NoHttp.newRequestQueue();
+        getStationList();
 
         setHasOptionsMenu(true);
         //出发站选择击事件
@@ -98,6 +115,38 @@ public class FragmentMain extends Fragment {
 
         return view;
     }
+
+    private void getStationList() {
+        Request<String> listRequest = new StringRequest(getStationApi);
+        listRequest.setCacheMode(CacheMode.REQUEST_NETWORK_FAILED_READ_CACHE);
+        queue.add(0, listRequest, listener);
+    }
+
+    OnResponseListener listener = new OnResponseListener() {
+        @Override
+        public void onStart(int what) {
+
+        }
+
+        @Override
+        public void onSucceed(int what, Response response) {
+            if (what == 0) {
+                if (response.responseCode() == 200) {
+                    MetroApplication.tempData = response.get().toString();
+                }
+            }
+        }
+
+        @Override
+        public void onFailed(int what, Response response) {
+
+        }
+
+        @Override
+        public void onFinish(int what) {
+
+        }
+    };
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

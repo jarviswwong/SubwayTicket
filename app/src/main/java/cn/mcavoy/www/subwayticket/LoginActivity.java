@@ -39,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     private MaterialEditText userNameEditText, userPassEditText;
     private String getTokenApi = "http://10.0.2.2/oauth/token";
     private String getUserApi = "http://10.0.2.2/api/user";
+    private String ClientId = "2";
     private String ClientSecret = "meIszHnbxBA7iZSPxD1zaQxFyN24n00oBPdf7zk7";
 
     private RequestQueue queue = NoHttp.newRequestQueue(1);
@@ -127,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
             tokenRequest.add("username", user_email);
             tokenRequest.add("password", user_pass);
             tokenRequest.add("grant_type", "password");
-            tokenRequest.add("client_id", "2");
+            tokenRequest.add("client_id", ClientId);
             tokenRequest.add("client_secret", ClientSecret);
             queue.add(1, tokenRequest, loginResponseListener);
 
@@ -162,7 +163,7 @@ public class LoginActivity extends AppCompatActivity {
             if (what == 2) {
                 editor.putString("user_info", response.get().toString());
                 editor.commit();
-                Log.d("userfinish", sp.getString("user_info", null));
+                //Log.d("userfinish", sp.getString("user_info", null));
                 InterfaceToMain();
             }
         }
