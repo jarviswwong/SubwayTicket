@@ -32,5 +32,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.yanzhenjie.nohttp:okhttp:1.1.0'
+    compile 'com.ogaclejapan.smarttablayout:library:1.6.1@aar'
+    compile 'com.ogaclejapan.smarttablayout:utils-v4:1.6.1@aar'
     testCompile 'junit:junit:4.12'
 }

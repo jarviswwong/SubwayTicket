@@ -28,7 +28,13 @@ import cn.mcavoy.www.subwayticket.MainActivity;
 public class MetroApplication extends Application {
     private SharedPreferences sp;
     private SharedPreferences.Editor editor;
-    private String getUserApi = "http://10.0.2.2/api/user";
+    public static String getUserApi = "http://10.0.2.2/api/user";
+    public static String getTokenApi = "http://10.0.2.2/oauth/token";
+    public static String getStationApi = "http://10.0.2.2/api/stations";
+    public static String getFaremapApi = "http://10.0.2.2/api/faremap";
+    public static String ClientId = "2";
+    public static String ClientSecret = "meIszHnbxBA7iZSPxD1zaQxFyN24n00oBPdf7zk7";
+
 
     //设置全局变量保存站台数据
     public static String tempData = "";

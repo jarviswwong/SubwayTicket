@@ -1,13 +1,13 @@
 package cn.mcavoy.www.subwayticket;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.app.FragmentManager;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity
 
     public void setDefaultFragment(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
-            FragmentManager fragmentManager = getFragmentManager();
+            FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             if (fragmentMain == null)
                 fragmentMain = new FragmentMain();
@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity
     private void switchContent(Fragment from, Fragment to) {
         if (isFragment != to) {
             isFragment = to;
-            FragmentManager fm = getFragmentManager();
+            FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
             if (!to.isAdded()) {
                 ft.hide(from).add(R.id.fragment_layout, to).commit();

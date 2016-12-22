@@ -38,10 +38,6 @@ import cn.mcavoy.www.subwayticket.subwayListModel.StationModel;
 public class LoginActivity extends AppCompatActivity {
     private Button signInButton;
     private MaterialEditText userNameEditText, userPassEditText;
-    private String getTokenApi = "http://10.0.2.2/oauth/token";
-    private String getUserApi = "http://10.0.2.2/api/user";
-    private String ClientId = "2";
-    private String ClientSecret = "meIszHnbxBA7iZSPxD1zaQxFyN24n00oBPdf7zk7";
 
     private Object cancelSign = new Object();
 
@@ -124,13 +120,13 @@ public class LoginActivity extends AppCompatActivity {
             String user_email = userNameEditText.getText().toString();
             String user_pass = userPassEditText.getText().toString();
             //申请token
-            Request<String> tokenRequest = NoHttp.createStringRequest(getTokenApi, RequestMethod.POST);
+            Request<String> tokenRequest = NoHttp.createStringRequest(MetroApplication.getTokenApi, RequestMethod.POST);
             tokenRequest.setPriority(Priority.HEIGHT);
             tokenRequest.add("username", user_email);
             tokenRequest.add("password", user_pass);
             tokenRequest.add("grant_type", "password");
-            tokenRequest.add("client_id", ClientId);
-            tokenRequest.add("client_secret", ClientSecret);
+            tokenRequest.add("client_id", MetroApplication.ClientId);
+            tokenRequest.add("client_secret", MetroApplication.ClientSecret);
             CallServer.getInstance().add(1, tokenRequest, loginResponseListener);
         }
     };
@@ -151,7 +147,7 @@ public class LoginActivity extends AppCompatActivity {
                     String token = map.get("access_token").toString();
                     editor.putString("user_token", token);
                     editor.commit();
-                    Request<String> requestForUser = NoHttp.createStringRequest(getUserApi);
+                    Request<String> requestForUser = NoHttp.createStringRequest(MetroApplication.getUserApi);
                     requestForUser.addHeader("Authorization", "Bearer " + sp.getString("user_token", null));
                     requestForUser.setCancelSign(cancelSign);
                     CallServer.getInstance().add(2, requestForUser, loginResponseListener);

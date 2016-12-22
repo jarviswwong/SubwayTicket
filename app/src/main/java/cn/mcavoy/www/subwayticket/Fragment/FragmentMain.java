@@ -1,11 +1,11 @@
 package cn.mcavoy.www.subwayticket.Fragment;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.telecom.Call;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -47,9 +47,6 @@ public class FragmentMain extends Fragment {
 
     String originStationName = "请选择", targetStationName = "请选择";  //记录用户选择
     String tempPay = "0";
-    //http
-    private String getStationApi = "http://10.0.2.2/api/stations";
-    private String getFaremapApi = "http://10.0.2.2/api/faremap";
 
     @Nullable
     @Override
@@ -168,7 +165,7 @@ public class FragmentMain extends Fragment {
             if (!originStationName.equals("请选择") && !targetStationName.equals("请选择")) {
                 //确保起点终点选择不同
                 if (!originStationName.equals(targetStationName)) {
-                    Request<String> fareRequest = new StringRequest(getFaremapApi, RequestMethod.POST);
+                    Request<String> fareRequest = new StringRequest(MetroApplication.getFaremapApi, RequestMethod.POST);
                     fareRequest.setCacheMode(REQUEST_NETWORK_FAILED_READ_CACHE);
                     fareRequest.add("originStation", originStationName);
                     fareRequest.add("targetStation", targetStationName);
@@ -184,7 +181,7 @@ public class FragmentMain extends Fragment {
     };
 
     private void getStationList() {
-        Request<String> listRequest = new StringRequest(getStationApi);
+        Request<String> listRequest = new StringRequest(MetroApplication.getStationApi);
         listRequest.setCacheMode(REQUEST_NETWORK_FAILED_READ_CACHE);
         CallServer.getInstance().add(0, listRequest, listener);
     }
