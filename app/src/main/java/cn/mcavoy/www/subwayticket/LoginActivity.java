@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.yolanda.nohttp.NoHttp;
+import com.yolanda.nohttp.Priority;
 import com.yolanda.nohttp.RequestMethod;
 import com.yolanda.nohttp.rest.OnResponseListener;
 import com.yolanda.nohttp.rest.Request;
@@ -42,7 +43,6 @@ public class LoginActivity extends AppCompatActivity {
     private String ClientId = "2";
     private String ClientSecret = "meIszHnbxBA7iZSPxD1zaQxFyN24n00oBPdf7zk7";
 
-    private RequestQueue queue = NoHttp.newRequestQueue(1);
     private Object cancelSign = new Object();
 
     private SharedPreferences sp;
@@ -125,17 +125,13 @@ public class LoginActivity extends AppCompatActivity {
             String user_pass = userPassEditText.getText().toString();
             //申请token
             Request<String> tokenRequest = NoHttp.createStringRequest(getTokenApi, RequestMethod.POST);
+            tokenRequest.setPriority(Priority.HEIGHT);
             tokenRequest.add("username", user_email);
             tokenRequest.add("password", user_pass);
             tokenRequest.add("grant_type", "password");
             tokenRequest.add("client_id", ClientId);
             tokenRequest.add("client_secret", ClientSecret);
-            queue.add(1, tokenRequest, loginResponseListener);
-
-            Request<String> requestForUser = NoHttp.createStringRequest(getUserApi);
-            requestForUser.setCancelSign(cancelSign);
-            requestForUser.addHeader("Authorization", "Bearer " + sp.getString("user_token", null));
-            queue.add(2, requestForUser, loginResponseListener);
+            CallServer.getInstance().add(1, tokenRequest, loginResponseListener);
         }
     };
 
@@ -155,15 +151,19 @@ public class LoginActivity extends AppCompatActivity {
                     String token = map.get("access_token").toString();
                     editor.putString("user_token", token);
                     editor.commit();
+                    Request<String> requestForUser = NoHttp.createStringRequest(getUserApi);
+                    requestForUser.addHeader("Authorization", "Bearer " + sp.getString("user_token", null));
+                    requestForUser.setCancelSign(cancelSign);
+                    CallServer.getInstance().add(2, requestForUser, loginResponseListener);
+
                 } else if (response.responseCode() == 401) {
                     Toast.makeText(LoginActivity.this, "用户名或密码错误!", Toast.LENGTH_SHORT).show();
-                    queue.cancelBySign(cancelSign);
+                    CallServer.getInstance().cancelBySign(cancelSign);
                 }
             }
             if (what == 2) {
                 editor.putString("user_info", response.get().toString());
                 editor.commit();
-                //Log.d("userfinish", sp.getString("user_info", null));
                 InterfaceToMain();
             }
         }

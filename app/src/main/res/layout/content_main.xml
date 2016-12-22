@@ -134,13 +134,13 @@
                 android:id="@+id/ticket_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1"
-                android:textSize="17sp"
                 android:paddingBottom="5dp"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:paddingTop="5dp"
-                android:textAlignment="center" />
+                android:text="1"
+                android:textAlignment="center"
+                android:textSize="17sp" />
 
             <Button
                 android:id="@+id/ticket_num_add"
@@ -174,20 +174,23 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="10dp">
+            android:layout_marginEnd="15dp">
 
             <TextView
                 android:id="@+id/textView_payable"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0.00"
-                android:textColor="@color/colorRedForMoney" />
+                android:text="0"
+                android:textColor="@color/colorRedForMoney"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/textView_currency"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="元" />
+                android:textColor="@color/colorRedForMoney"
+                android:text=".00 元"
+                android:textSize="18sp" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -199,7 +202,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="30dp"
-        android:background="@drawable/button_press_selector"
+        android:background="@drawable/design_book_button"
         android:text="立即购票"
         android:textColor="@color/colorWhiteLight"
         android:textSize="18sp" />

@@ -21,6 +21,7 @@ import com.yolanda.nohttp.rest.StringRequest;
 import java.util.Map;
 import java.util.Objects;
 
+import cn.mcavoy.www.subwayticket.CallServer;
 import cn.mcavoy.www.subwayticket.MainActivity;
 
 
@@ -28,7 +29,6 @@ public class MetroApplication extends Application {
     private SharedPreferences sp;
     private SharedPreferences.Editor editor;
     private String getUserApi = "http://10.0.2.2/api/user";
-    private RequestQueue queue;
 
     //设置全局变量保存站台数据
     public static String tempData = "";
@@ -36,7 +36,6 @@ public class MetroApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        queue = NoHttp.newRequestQueue(2);
         sp = getSharedPreferences("user_validate", Context.MODE_PRIVATE);
         editor = sp.edit();
         NoHttp.initialize(this, new NoHttp.Config()
@@ -57,7 +56,7 @@ public class MetroApplication extends Application {
         if (sp.contains("user_token") && sp.contains("user_info")) {
             Request<String> validateRequest = new StringRequest(getUserApi);
             validateRequest.addHeader("Authorization", "Bearer " + sp.getString("user_token", null));
-            queue.add(0, validateRequest, listener);
+            CallServer.getInstance().add(0, validateRequest, listener);
         }
     }
 

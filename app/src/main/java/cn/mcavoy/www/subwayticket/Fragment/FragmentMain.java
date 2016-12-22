@@ -6,6 +6,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.telecom.Call;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,7 +20,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.yolanda.nohttp.NoHttp;
+import com.yolanda.nohttp.RequestMethod;
 import com.yolanda.nohttp.rest.CacheMode;
 import com.yolanda.nohttp.rest.OnResponseListener;
 import com.yolanda.nohttp.rest.Request;
@@ -24,21 +30,26 @@ import com.yolanda.nohttp.rest.RequestQueue;
 import com.yolanda.nohttp.rest.Response;
 import com.yolanda.nohttp.rest.StringRequest;
 
+import java.util.List;
+
 import cn.mcavoy.www.subwayticket.Application.MetroApplication;
+import cn.mcavoy.www.subwayticket.CallServer;
 import cn.mcavoy.www.subwayticket.R;
 import cn.mcavoy.www.subwayticket.StationListActivity;
+
+import static com.yolanda.nohttp.rest.CacheMode.REQUEST_NETWORK_FAILED_READ_CACHE;
 
 
 public class FragmentMain extends Fragment {
     private View originLayout, targetLayout;
-    private TextView originText, targetText, ticketNum;
+    private TextView originText, targetText, ticketNum, ticketPay;
     private Button ticketAdd, ticketCut, bookTicket;
 
     String originStationName = "请选择", targetStationName = "请选择";  //记录用户选择
-
+    String tempPay = "0";
     //http
     private String getStationApi = "http://10.0.2.2/api/stations";
-    private RequestQueue queue;
+    private String getFaremapApi = "http://10.0.2.2/api/faremap";
 
     @Nullable
     @Override
@@ -49,12 +60,13 @@ public class FragmentMain extends Fragment {
         originText = (TextView) view.findViewById(R.id.textView_originText);
         targetText = (TextView) view.findViewById(R.id.textView_targetText);
         ticketNum = (TextView) view.findViewById(R.id.ticket_number);
+        ticketPay = (TextView) view.findViewById(R.id.textView_payable);
         ticketAdd = (Button) view.findViewById(R.id.ticket_num_add);
         ticketCut = (Button) view.findViewById(R.id.ticket_num_cut);
         bookTicket = (Button) view.findViewById(R.id.button_startBookTicket);
+        bookTicket.setEnabled(false);
 
         //提前初始化站台list缓存 加快加载速度
-        queue = NoHttp.newRequestQueue();
         getStationList();
 
         setHasOptionsMenu(true);
@@ -106,6 +118,30 @@ public class FragmentMain extends Fragment {
             }
         });
 
+        originText.addTextChangedListener(textWatcher);
+        targetText.addTextChangedListener(textWatcher);
+
+        //票数变化监听
+        ticketNum.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!ticketPay.getText().equals("0")) {
+                    String resultPay = String.valueOf(Integer.parseInt(tempPay) * (Integer.parseInt(s.toString())));
+                    ticketPay.setText(resultPay);
+                }
+            }
+        });
+
         bookTicket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,10 +152,41 @@ public class FragmentMain extends Fragment {
         return view;
     }
 
+    TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (!originStationName.equals("请选择") && !targetStationName.equals("请选择")) {
+                //确保起点终点选择不同
+                if (!originStationName.equals(targetStationName)) {
+                    Request<String> fareRequest = new StringRequest(getFaremapApi, RequestMethod.POST);
+                    fareRequest.setCacheMode(REQUEST_NETWORK_FAILED_READ_CACHE);
+                    fareRequest.add("originStation", originStationName);
+                    fareRequest.add("targetStation", targetStationName);
+                    CallServer.getInstance().add(1, fareRequest, listener);
+                } else {
+                    ticketPay.setText("0");
+                    tempPay = "0";
+                    bookTicket.setEnabled(false);
+                    Toast.makeText(getActivity().getBaseContext(), "亲，您真的是来乘地铁的吗？", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    };
+
     private void getStationList() {
         Request<String> listRequest = new StringRequest(getStationApi);
-        listRequest.setCacheMode(CacheMode.REQUEST_NETWORK_FAILED_READ_CACHE);
-        queue.add(0, listRequest, listener);
+        listRequest.setCacheMode(REQUEST_NETWORK_FAILED_READ_CACHE);
+        CallServer.getInstance().add(0, listRequest, listener);
     }
 
     OnResponseListener listener = new OnResponseListener() {
@@ -135,11 +202,26 @@ public class FragmentMain extends Fragment {
                     MetroApplication.tempData = response.get().toString();
                 }
             }
+            if (what == 1) {
+                if (response.responseCode() == 200) {
+                    ticketPay.setText("" + Integer.parseInt(response.get().toString()) * Integer.parseInt(ticketNum.getText().toString()));
+                    tempPay = response.get().toString();
+                    if (!ticketPay.getText().equals("0") || !ticketPay.getText().equals("")) {
+                        bookTicket.setEnabled(true);
+                    }
+                }
+                if (response.responseCode() == 500) {
+                    Toast.makeText(getActivity().getBaseContext(), "目前还不支持换乘购票哦", Toast.LENGTH_SHORT).show();
+                    ticketPay.setText("0");
+                    tempPay = "0";
+                    bookTicket.setEnabled(false);
+                }
+            }
         }
 
         @Override
         public void onFailed(int what, Response response) {
-
+            Toast.makeText(getActivity().getBaseContext(), "获取票价失败：服务器连接失败！", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -190,4 +272,6 @@ public class FragmentMain extends Fragment {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }
