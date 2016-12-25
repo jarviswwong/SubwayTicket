@@ -30,6 +30,10 @@ import cn.mcavoy.www.subwayticket.Application.MetroApplication;
 import cn.mcavoy.www.subwayticket.CallServer;
 import cn.mcavoy.www.subwayticket.Model.TicketModel;
 import cn.mcavoy.www.subwayticket.R;
+import in.srain.cube.views.ptr.PtrClassicFrameLayout;
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
 
 public class TickHistoryTotal extends Fragment {
     private RecyclerView mrecyclerView;
@@ -41,6 +45,7 @@ public class TickHistoryTotal extends Fragment {
     private View view;
     private RelativeLayout noDateView;
     private RotateLoading rotateLoading;
+    private PtrClassicFrameLayout ptrClassicFrameLayout;
 
     @Nullable
     @Override
@@ -49,8 +54,25 @@ public class TickHistoryTotal extends Fragment {
         noDateView = (RelativeLayout) view.findViewById(R.id.no_history_tip_total);
         mrecyclerView = (RecyclerView) view.findViewById(R.id.totaltravel_recycler_view);
         rotateLoading = (RotateLoading) view.findViewById(R.id.totalTravelOrder_loading);
-
+        ptrClassicFrameLayout = (PtrClassicFrameLayout) view.findViewById(R.id.total_history_refresh);
         getDate();
+
+        ptrClassicFrameLayout.setPtrHandler(new PtrHandler() {
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                return PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
+            }
+
+            @Override
+            public void onRefreshBegin(PtrFrameLayout frame) {
+                ptrClassicFrameLayout.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getDate();
+                    }
+                }, 1800);
+            }
+        });
         return view;
     }
 
@@ -111,7 +133,7 @@ public class TickHistoryTotal extends Fragment {
 
         @Override
         public void onFinish(int what) {
-
+            ptrClassicFrameLayout.refreshComplete();
         }
     };
 
@@ -137,6 +159,8 @@ public class TickHistoryTotal extends Fragment {
     }
 
     private void seperateLists(TicketModel model) {
+        mlists.clear();
+        mAlllists.clear();
         if (model.getTicketsEntities() != null && model.getTicketsEntities().size() > 0) {
             for (int i = 0; i < model.getTicketsEntities().size(); ++i) {
                 TicketModel.TicketsEntity entity = new TicketModel.TicketsEntity();
