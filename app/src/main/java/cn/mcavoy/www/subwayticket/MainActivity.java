@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity
     private Fragment isFragment; //记录当前的fragment
 
     private Toolbar toolbar;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity
                 SharedPreferences.Editor editor = sp.edit();
                 editor.clear();
                 editor.commit();
+                MetroApplication.userModel = null;
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
@@ -142,6 +143,4 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
-
-
 }

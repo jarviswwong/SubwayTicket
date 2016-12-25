@@ -1,19 +1,15 @@
 package cn.mcavoy.www.subwayticket;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -22,18 +18,15 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import com.yolanda.nohttp.NoHttp;
 import com.yolanda.nohttp.Priority;
 import com.yolanda.nohttp.RequestMethod;
+import com.yolanda.nohttp.error.TimeoutError;
 import com.yolanda.nohttp.rest.OnResponseListener;
 import com.yolanda.nohttp.rest.Request;
-import com.yolanda.nohttp.rest.RequestQueue;
 import com.yolanda.nohttp.rest.Response;
-import com.yolanda.nohttp.rest.StringRequest;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import cn.mcavoy.www.subwayticket.Application.MetroApplication;
-import cn.mcavoy.www.subwayticket.subwayListModel.StationModel;
+import cn.mcavoy.www.subwayticket.Model.UserModel;
 
 public class LoginActivity extends AppCompatActivity {
     private Button signInButton;
@@ -44,11 +37,14 @@ public class LoginActivity extends AppCompatActivity {
     private SharedPreferences sp;
     private SharedPreferences.Editor editor;
 
+    private Gson gson;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sp = getSharedPreferences("user_validate", Context.MODE_PRIVATE);
         editor = sp.edit();
+        gson = new Gson();
 
         //先进行登录验证
         if (sp.contains("isValidated")) {
@@ -116,7 +112,6 @@ public class LoginActivity extends AppCompatActivity {
     View.OnClickListener signInClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Gson gson = new Gson();
             String user_email = userNameEditText.getText().toString();
             String user_pass = userPassEditText.getText().toString();
             //申请token
@@ -141,7 +136,6 @@ public class LoginActivity extends AppCompatActivity {
         public void onSucceed(int what, Response response) {
             if (what == 1) {
                 if (response.responseCode() == 200) {
-                    Gson gson = new Gson();
                     Map<String, Object> map = gson.fromJson(response.get().toString(), new TypeToken<Map<String, Object>>() {
                     }.getType());
                     String token = map.get("access_token").toString();
@@ -159,14 +153,20 @@ public class LoginActivity extends AppCompatActivity {
             }
             if (what == 2) {
                 editor.putString("user_info", response.get().toString());
+                editor.putString("isValidated", "true");
                 editor.commit();
+                MetroApplication.userModel = gson.fromJson(response.get().toString(), UserModel.class);
                 InterfaceToMain();
             }
         }
 
         @Override
         public void onFailed(int what, Response response) {
+            Exception exception = response.getException();
 
+            if (exception instanceof TimeoutError) {
+                Toast.makeText(getBaseContext(), "服务器连接超时！", Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override

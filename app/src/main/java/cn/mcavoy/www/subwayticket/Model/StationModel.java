@@ -1,4 +1,4 @@
-package cn.mcavoy.www.subwayticket.subwayListModel;
+package cn.mcavoy.www.subwayticket.Model;
 
 import java.util.ArrayList;
 import java.util.List;

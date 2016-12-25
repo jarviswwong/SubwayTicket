@@ -2,7 +2,6 @@ package cn.mcavoy.www.subwayticket.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +11,11 @@ import com.jiang.android.lib.adapter.BaseAdapter;
 import com.jiang.android.lib.adapter.expand.StickyRecyclerHeadersAdapter;
 import com.jiang.android.lib.widget.SwipeItemLayout;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.mcavoy.www.subwayticket.R;
-import cn.mcavoy.www.subwayticket.subwayListModel.StationModel;
+import cn.mcavoy.www.subwayticket.Model.StationModel;
 import cn.mcavoy.www.subwayticket.widget.IndexAdapter;
 
 
@@ -59,7 +56,7 @@ public class StationListAdapter extends BaseAdapter<StationModel.StationsEntity,
 
     @Override
     public StationListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.station_list_recylerview, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.station_list_recyclerview, parent, false);
 
         //添加点击事件
         view.setOnClickListener(this);

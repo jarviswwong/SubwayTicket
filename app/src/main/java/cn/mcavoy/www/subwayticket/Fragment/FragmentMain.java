@@ -6,10 +6,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.telecom.Call;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,12 +20,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dd.CircularProgressButton;
 import com.google.gson.Gson;
-import com.yolanda.nohttp.NoHttp;
+import com.orhanobut.dialogplus.DialogPlus;
+import com.orhanobut.dialogplus.ViewHolder;
 import com.yolanda.nohttp.RequestMethod;
+import com.yolanda.nohttp.error.TimeoutError;
 import com.yolanda.nohttp.rest.CacheMode;
 import com.yolanda.nohttp.rest.OnResponseListener;
 import com.yolanda.nohttp.rest.Request;
@@ -30,6 +37,8 @@ import com.yolanda.nohttp.rest.RequestQueue;
 import com.yolanda.nohttp.rest.Response;
 import com.yolanda.nohttp.rest.StringRequest;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import cn.mcavoy.www.subwayticket.Application.MetroApplication;
@@ -45,13 +54,18 @@ public class FragmentMain extends Fragment {
     private TextView originText, targetText, ticketNum, ticketPay;
     private Button ticketAdd, ticketCut, bookTicket;
 
-    String originStationName = "请选择", targetStationName = "请选择";  //记录用户选择
-    String tempPay = "0";
+    private String originStationName = "请选择", targetStationName = "请选择";  //记录用户选择
+    private String tempPay = "0";
+
+    private View view;
+    private CircularProgressButton circularProgressButton;
+    private DialogPlus dialogPlus;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.content_main, container, false);
+        view = inflater.inflate(R.layout.content_main, container, false);
+
         originLayout = view.findViewById(R.id.content_main_originLayout);
         targetLayout = view.findViewById(R.id.content_main_targetLayout);
         originText = (TextView) view.findViewById(R.id.textView_originText);
@@ -139,16 +153,81 @@ public class FragmentMain extends Fragment {
             }
         });
 
+        //点击购票按钮
         bookTicket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startConfirmDialog();
             }
         });
 
         return view;
     }
 
+    //弹出购票对话框
+    private void startConfirmDialog() {
+        dialogPlus = DialogPlus.newDialog(view.getContext())
+                .setContentHolder(new ViewHolder(R.layout.confirm_dialog_view))
+                .setGravity(Gravity.BOTTOM)
+                .setCancelable(true)
+                .setHeader(R.layout.confirm_dialog_header)
+                .create();
+
+        View headerView = dialogPlus.getHeaderView();
+        Button cancelDialog = (Button) headerView.findViewById(R.id.btn_cancelDialog);
+        cancelDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogPlus.dismiss();
+            }
+        });
+
+        View holderView = dialogPlus.getHolderView();
+        TextView dialog_oStation = (TextView) holderView.findViewById(R.id.dialog_oStationName);
+        TextView dialog_tStation = (TextView) holderView.findViewById(R.id.dialog_tStationName);
+        TextView dialog_price = (TextView) holderView.findViewById(R.id.dialog_price);
+        dialog_oStation.setText(originStationName);
+        dialog_tStation.setText(targetStationName);
+        dialog_price.setText(ticketPay.getText().toString());
+
+        circularProgressButton = (CircularProgressButton) holderView.findViewById(R.id.btn_confirm_pay);
+        circularProgressButton.setIndeterminateProgressMode(true);
+        //提交购票按钮事件点击
+        circularProgressButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (circularProgressButton.getProgress() == 0) {
+                    SharedPreferences sp = getActivity().getSharedPreferences("user_validate", Context.MODE_PRIVATE);
+                    //假如存在
+                    if (sp.contains("user_token")) {
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        Date curDate = new Date(System.currentTimeMillis());
+                        String thisDate = simpleDateFormat.format(curDate);
+                        Request<String> submitRequest = new StringRequest(MetroApplication.postSubmitTicketApi, RequestMethod.POST);
+                        submitRequest.addHeader("Authorization", "Bearer " + sp.getString("user_token", null));
+                        submitRequest.add("ownerId", MetroApplication.userModel.getId());
+                        submitRequest.add("oStationName", originStationName);
+                        submitRequest.add("tStationName", targetStationName);
+                        submitRequest.add("ticketNum", ticketNum.getText().toString());
+                        submitRequest.add("ticketPrice", ticketPay.getText().toString());
+                        submitRequest.add("ticketStatus", "未取票");
+                        submitRequest.add("payDate", thisDate);
+                        CallServer.getInstance().add(2, submitRequest, listener);
+                    } else {
+                        Toast.makeText(getActivity().getBaseContext(), "请重新登录!", Toast.LENGTH_SHORT).show();
+                    }
+                } else if (circularProgressButton.getProgress() == -1) {
+                    circularProgressButton.setProgress(0);
+                } else if (circularProgressButton.getProgress() == 100) {
+                    dialogPlus.dismiss();
+                }
+            }
+        });
+
+        dialogPlus.show();
+    }
+
+    //textview监听事件
     TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -189,7 +268,9 @@ public class FragmentMain extends Fragment {
     OnResponseListener listener = new OnResponseListener() {
         @Override
         public void onStart(int what) {
-
+            if (what == 2) {
+                circularProgressButton.setProgress(50);
+            }
         }
 
         @Override
@@ -214,11 +295,31 @@ public class FragmentMain extends Fragment {
                     bookTicket.setEnabled(false);
                 }
             }
+            if (what == 2) {
+                if (response.responseCode() == 200) {
+                    circularProgressButton.setProgress(100);
+                } else {
+                    circularProgressButton.setProgress(-1);
+                }
+            }
         }
 
         @Override
         public void onFailed(int what, Response response) {
-            Toast.makeText(getActivity().getBaseContext(), "获取票价失败：服务器连接失败！", Toast.LENGTH_SHORT).show();
+            Exception exception = response.getException();
+
+            if (exception instanceof TimeoutError) {
+                if (what == 0) {
+                    getStationList();
+                }
+                if (what == 1) {
+                    Toast.makeText(getActivity().getBaseContext(), "error: 服务器连接失败", Toast.LENGTH_SHORT).show();
+                }
+                if (what == 2) {
+                    circularProgressButton.setProgress(-1);
+                }
+            }
+
         }
 
         @Override

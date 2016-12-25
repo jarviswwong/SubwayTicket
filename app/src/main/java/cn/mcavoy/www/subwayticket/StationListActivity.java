@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +23,7 @@ import cn.mcavoy.www.subwayticket.Adapter.StationListAdapter;
 import cn.mcavoy.www.subwayticket.Application.MetroApplication;
 import cn.mcavoy.www.subwayticket.Pinyin.CharacterParser;
 import cn.mcavoy.www.subwayticket.Pinyin.PinyinComparator;
-import cn.mcavoy.www.subwayticket.subwayListModel.StationModel;
+import cn.mcavoy.www.subwayticket.Model.StationModel;
 import cn.mcavoy.www.subwayticket.widget.DividerDecoration;
 import cn.mcavoy.www.subwayticket.widget.SideBar;
 import cn.mcavoy.www.subwayticket.widget.TouchableRecyclerView;
@@ -86,10 +85,10 @@ public class StationListActivity extends AppCompatActivity {
         mRecyclerView = (TouchableRecyclerView) findViewById(R.id.station_recycler_view);
         mSideBar.setTextView(mUserDialog);
         mZSideBar.setTextView(mUserDialog);
-        getData();
+        getDate();
     }
 
-    public void getData() {
+    public void getDate() {
 //        String tempData = "[{\"id\":\"123456\",\"stationName\":\"闸弄口\",\"metroLine\":\"1\",\"metroLineSecond\":\"\"}," +
 //                "{\"id\":\"123333\",\"stationName\":\"火车东站\",\"metroLine\":\"1\",\"metroLineSecond\":\"4\"}," +
 //                "{\"id\":\"32131\",\"stationName\":\"打铁关\",\"metroLine\":\"1\",\"metroLineSecond\":\"\"}," +

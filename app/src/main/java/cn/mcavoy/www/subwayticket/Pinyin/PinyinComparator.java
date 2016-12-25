@@ -2,7 +2,7 @@ package cn.mcavoy.www.subwayticket.Pinyin;
 
 import java.util.Comparator;
 
-import cn.mcavoy.www.subwayticket.subwayListModel.StationModel;
+import cn.mcavoy.www.subwayticket.Model.StationModel;
 
 public class PinyinComparator implements Comparator<StationModel.StationsEntity> {
     @Override
