@@ -64,55 +64,52 @@ public class MetroApplication extends Application {
 
         Logger.setDebug(true);
         Logger.setTag("MetroHttpDebugger");
-
-        validateLoginData();
     }
-
-    //验证是否登陆过
-    public void validateLoginData() {
-        if (sp.contains("user_token") && sp.contains("user_info")) {
-            Request<String> validateRequest = new StringRequest(getUserApi);
-            validateRequest.addHeader("Authorization", "Bearer " + sp.getString("user_token", null));
-            CallServer.getInstance().add(0, validateRequest, listener);
-        }
-    }
-
-    OnResponseListener listener = new OnResponseListener() {
-        @Override
-        public void onStart(int what) {
-
-        }
-
-        @Override
-        public void onSucceed(int what, Response response) {
-            if (what == 0) {
-                if (response.responseCode() == 200) {
-                    editor.putString("user_info", response.get().toString());
-                    editor.putString("isValidated", "true");
-                    Gson gson = new Gson();
-                    userModel = gson.fromJson(response.get().toString(), UserModel.class);
-                } else {
-                    editor.putString("isValidated", "false");
-                    userModel = null;
-                }
-                editor.commit();
-            }
-        }
-
-        @Override
-        public void onFailed(int what, Response response) {
-            Exception exception = response.getException();
-
-            if (exception instanceof TimeoutError) {
-                userModel = null;
-                editor.clear();
-                editor.commit();
-            }
-        }
-
-        @Override
-        public void onFinish(int what) {
-
-        }
-    };
+//    //验证是否登陆过
+//    public void validateLoginData() {
+//        if (sp.contains("user_token") && sp.contains("user_info")) {
+//            Request<String> validateRequest = new StringRequest(getUserApi);
+//            validateRequest.addHeader("Authorization", "Bearer " + sp.getString("user_token", null));
+//            CallServer.getInstance().add(0, validateRequest, listener);
+//        }
+//    }
+//
+//    OnResponseListener listener = new OnResponseListener() {
+//        @Override
+//        public void onStart(int what) {
+//
+//        }
+//
+//        @Override
+//        public void onSucceed(int what, Response response) {
+//            if (what == 0) {
+//                if (response.responseCode() == 200) {
+//                    editor.putString("user_info", response.get().toString());
+//                    editor.putString("isValidated", "true");
+//                    Gson gson = new Gson();
+//                    userModel = gson.fromJson(response.get().toString(), UserModel.class);
+//                } else {
+//                    editor.putString("isValidated", "false");
+//                    userModel = null;
+//                }
+//                editor.commit();
+//            }
+//        }
+//
+//        @Override
+//        public void onFailed(int what, Response response) {
+//            Exception exception = response.getException();
+//
+//            if (exception instanceof TimeoutError) {
+//                userModel = null;
+//                editor.clear();
+//                editor.commit();
+//            }
+//        }
+//
+//        @Override
+//        public void onFinish(int what) {
+//
+//        }
+//    };
 }

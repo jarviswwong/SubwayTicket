@@ -29,6 +29,7 @@ import com.yolanda.nohttp.error.TimeoutError;
 import com.yolanda.nohttp.rest.OnResponseListener;
 import com.yolanda.nohttp.rest.Request;
 import com.yolanda.nohttp.rest.Response;
+import com.yolanda.nohttp.rest.StringRequest;
 
 import java.util.Map;
 
@@ -46,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private Gson gson;
 
-    private DialogPlus dialogPlus;
+    private DialogPlus dialogPlus, loadingUserDateDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,16 +55,16 @@ public class LoginActivity extends AppCompatActivity {
         sp = getSharedPreferences("user_validate", Context.MODE_PRIVATE);
         editor = sp.edit();
         gson = new Gson();
-
-        //先进行登录验证
-        if (sp.contains("isValidated")) {
-            if (sp.getString("isValidated", null).equals("true")) {
-                InterfaceToMain();
-            }
-        }
+        //去掉状态栏
         int flag = WindowManager.LayoutParams.FLAG_FULLSCREEN;
         Window window = this.getWindow();
         window.setFlags(flag, flag);
+
+        validateLoginData();
+    }
+
+    //显示登录的界面方法
+    private void ShowLoginView() {
         setContentView(R.layout.login_main);
 
         signInButton = (Button) findViewById(R.id.btn_signIn);
@@ -87,7 +88,73 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    //跳转类
+    //验证是否登陆过
+    public void validateLoginData() {
+        if (sp.contains("user_token") && sp.contains("user_info")) {
+            Request<String> validateRequest = new StringRequest(MetroApplication.getUserApi);
+            validateRequest.addHeader("Authorization", "Bearer " + sp.getString("user_token", null));
+            CallServer.getInstance().add(0, validateRequest, listener);
+        } else {
+            ShowLoginView();
+        }
+    }
+
+    //监听获取用户的http请求
+    OnResponseListener listener = new OnResponseListener() {
+        @Override
+        public void onStart(int what) {
+            startloadingUserDateDialog();
+            loadingUserDateDialog.show();
+        }
+
+        @Override
+        public void onSucceed(int what, Response response) {
+            if (what == 0) {
+                if (response.responseCode() == 200) {
+                    editor.putString("user_info", response.get().toString());
+                    editor.putString("isValidated", "true");
+                    Gson gson = new Gson();
+                    MetroApplication.userModel = gson.fromJson(response.get().toString(), UserModel.class);
+                    InterfaceToMain();
+                } else {
+                    editor.putString("isValidated", "false");
+                    MetroApplication.userModel = null;
+                    ShowLoginView();
+                }
+                editor.commit();
+            }
+        }
+
+        @Override
+        public void onFailed(int what, Response response) {
+            Exception exception = response.getException();
+
+            if (exception instanceof TimeoutError) {
+                MetroApplication.userModel = null;
+                editor.clear();
+                editor.commit();
+                ShowLoginView();
+            }
+        }
+
+        @Override
+        public void onFinish(int what) {
+            loadingUserDateDialog.dismiss();
+        }
+    };
+
+    //读取数据loading动画
+    private void startloadingUserDateDialog() {
+        loadingUserDateDialog = DialogPlus.newDialog(LoginActivity.this)
+                .setContentHolder(new ViewHolder(R.layout.dialog_loading_userdate))
+                .setOverlayBackgroundResource(android.R.color.transparent)
+                .setContentBackgroundResource(Color.TRANSPARENT)
+                .setGravity(Gravity.CENTER)
+                .setCancelable(false)
+                .create();
+    }
+
+    //跳转到主类
     private void InterfaceToMain() {
         Intent intent = new Intent();
         intent.setClass(this, MainActivity.class);
@@ -112,7 +179,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
-    //加载动画初始化
+    //登录加载动画初始化
     public void startAnimateLoading() {
         dialogPlus = DialogPlus.newDialog(LoginActivity.this)
                 .setContentHolder(new ViewHolder(R.layout.dialog_loading_two))
@@ -122,6 +189,7 @@ public class LoginActivity extends AppCompatActivity {
                 .create();
     }
 
+    //登录请求http监听
     private OnResponseListener loginResponseListener = new OnResponseListener() {
         @Override
         public void onStart(int what) {

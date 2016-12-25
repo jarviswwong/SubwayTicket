@@ -49,10 +49,6 @@ public class MainActivity extends AppCompatActivity
         toolbar.setTitle("首页");
         setSupportActionBar(toolbar);
 
-//        View navHeader = LayoutInflater.from(this).inflate(R.layout.nav_header_main, null, false);
-//        navUserName = (TextView) navHeader.findViewById(R.id.nav_username);
-//        navUserName.setText("欢迎回来," + MetroApplication.userModel.getName().toString());
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -66,6 +62,10 @@ public class MainActivity extends AppCompatActivity
         ViewGroup.LayoutParams params = navigationView.getLayoutParams();
         params.width = getResources().getDisplayMetrics().widthPixels * 7 / 10;
         navigationView.setLayoutParams(params);
+
+        View navHeader = navigationView.getHeaderView(0);
+        navUserName = (TextView) navHeader.findViewById(R.id.nav_username);
+        navUserName.setText(MetroApplication.userModel.getName().toString());
 
         setDefaultFragment(savedInstanceState);
     }
