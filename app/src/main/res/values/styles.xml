@@ -17,6 +17,8 @@
 
     </style>
 
+    <style name="RegisterNoActionBar" parent="AppTheme.NoActionBar"></style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.AppBarNoOverlay" parent="Theme.AppCompat.Light.DarkActionBar"></style>

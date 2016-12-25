@@ -19,4 +19,8 @@
 
         <item name="android:statusBarColor">@android:color/background_light</item>
     </style>
+
+    <style name="RegisterNoActionBar" parent="AppTheme.NoActionBar">
+        <item name="android:statusBarColor">@color/colorWhiteLight</item>
+    </style>
 </resources>

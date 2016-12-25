@@ -3,17 +3,24 @@ package cn.mcavoy.www.subwayticket;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.orhanobut.dialogplus.DialogPlus;
+import com.orhanobut.dialogplus.ViewHolder;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.yolanda.nohttp.NoHttp;
 import com.yolanda.nohttp.Priority;
@@ -31,13 +38,15 @@ import cn.mcavoy.www.subwayticket.Model.UserModel;
 public class LoginActivity extends AppCompatActivity {
     private Button signInButton;
     private MaterialEditText userNameEditText, userPassEditText;
-
+    private TextView turnToSignUp;
     private Object cancelSign = new Object();
 
     private SharedPreferences sp;
     private SharedPreferences.Editor editor;
 
     private Gson gson;
+
+    private DialogPlus dialogPlus;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,9 +57,13 @@ public class LoginActivity extends AppCompatActivity {
 
         //先进行登录验证
         if (sp.contains("isValidated")) {
-            if (sp.getString("isValidated", null).equals("true"))
+            if (sp.getString("isValidated", null).equals("true")) {
                 InterfaceToMain();
+            }
         }
+        int flag = WindowManager.LayoutParams.FLAG_FULLSCREEN;
+        Window window = this.getWindow();
+        window.setFlags(flag, flag);
         setContentView(R.layout.login_main);
 
         signInButton = (Button) findViewById(R.id.btn_signIn);
@@ -62,6 +75,16 @@ public class LoginActivity extends AppCompatActivity {
         userNameEditText.addTextChangedListener(textWatcher);
         userPassEditText.addTextChangedListener(textWatcher);
 
+        turnToSignUp = (TextView) findViewById(R.id.turnTo_signUp);
+        turnToSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     //跳转类
@@ -71,43 +94,6 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
-    //验证是否登陆过
-//    public void validateLoginData() {
-//        if (sp.contains("user_token") && sp.contains("user_info")) {
-//            Log.d("user_token", sp.getString("user_token", null));
-//            Log.d("user_msg", sp.getString("user_info", null));
-//            Request<String> validateRequest = new StringRequest(getUserApi);
-//            validateRequest.addHeader("Authorization", "Bearer " + sp.getString("user_token", null));
-//            queue.add(0, validateRequest, new OnResponseListener<String>() {
-//                @Override
-//                public void onStart(int what) {
-//
-//                }
-//
-//                @Override
-//                public void onSucceed(int what, Response<String> response) {
-//                    if (what == 0) {
-//                        if (response.responseCode() == 200) {
-//                            editor.putString("user_info", response.get());
-//                            editor.commit();
-//                            InterfaceToMain();
-//                        }
-//                    }
-//                }
-//
-//                @Override
-//                public void onFailed(int what, Response<String> response) {
-//
-//                }
-//
-//                @Override
-//                public void onFinish(int what) {
-//
-//                }
-//            });
-//        }
-//    }
 
     View.OnClickListener signInClick = new View.OnClickListener() {
         @Override
@@ -126,10 +112,21 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
+    //加载动画初始化
+    public void startAnimateLoading() {
+        dialogPlus = DialogPlus.newDialog(LoginActivity.this)
+                .setContentHolder(new ViewHolder(R.layout.dialog_loading_two))
+                .setContentBackgroundResource(Color.TRANSPARENT)
+                .setGravity(Gravity.CENTER)
+                .setCancelable(false)
+                .create();
+    }
+
     private OnResponseListener loginResponseListener = new OnResponseListener() {
         @Override
         public void onStart(int what) {
-
+            startAnimateLoading();
+            dialogPlus.show();
         }
 
         @Override
@@ -171,7 +168,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         public void onFinish(int what) {
-
+            dialogPlus.dismiss();
         }
     };
 

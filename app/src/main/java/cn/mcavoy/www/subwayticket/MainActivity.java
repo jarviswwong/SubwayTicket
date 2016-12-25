@@ -13,13 +13,19 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import cn.mcavoy.www.subwayticket.Application.MetroApplication;
 import cn.mcavoy.www.subwayticket.Fragment.FragmentMain;
 import cn.mcavoy.www.subwayticket.Fragment.FragmentTicketHistory;
 import cn.mcavoy.www.subwayticket.Fragment.FragmentUserSetting;
+import cn.mcavoy.www.subwayticket.Model.UserModel;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -32,6 +38,8 @@ public class MainActivity extends AppCompatActivity
 
     private Toolbar toolbar;
 
+    private TextView navUserName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +48,10 @@ public class MainActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("首页");
         setSupportActionBar(toolbar);
+
+//        View navHeader = LayoutInflater.from(this).inflate(R.layout.nav_header_main, null, false);
+//        navUserName = (TextView) navHeader.findViewById(R.id.nav_username);
+//        navUserName.setText("欢迎回来," + MetroApplication.userModel.getName().toString());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
