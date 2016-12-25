@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity
 
     private Toolbar toolbar;
 
-    private TextView navUserName;
+    private TextView navUserName, navUserEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity
         View navHeader = navigationView.getHeaderView(0);
         navUserName = (TextView) navHeader.findViewById(R.id.nav_username);
         navUserName.setText(MetroApplication.userModel.getName().toString());
+        navUserEmail = (TextView) navHeader.findViewById(R.id.nav_useremail);
+        navUserEmail.setText(MetroApplication.userModel.getEmail().toString());
 
         setDefaultFragment(savedInstanceState);
     }

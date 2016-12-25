@@ -69,12 +69,16 @@ public class RegisterActivity extends AppCompatActivity {
     View.OnClickListener btnListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Request<String> registerRequest = new StringRequest(MetroApplication.registerApi, RequestMethod.POST);
-            registerRequest.add("email", emailEditText.getText().toString());
-            registerRequest.add("password", passwordEditText.getText().toString());
-            registerRequest.add("name", nameEditText.getText().toString());
-            registerRequest.add("mobile", mobileEditText.getText().toString());
-            CallServer.getInstance().add(0, registerRequest, listener);
+            if (passwordEditText.getText().toString().equals(checkPassEidtText.getText().toString())) {
+                Request<String> registerRequest = new StringRequest(MetroApplication.registerApi, RequestMethod.POST);
+                registerRequest.add("email", emailEditText.getText().toString());
+                registerRequest.add("password", passwordEditText.getText().toString());
+                registerRequest.add("name", nameEditText.getText().toString());
+                registerRequest.add("mobile", mobileEditText.getText().toString());
+                CallServer.getInstance().add(0, registerRequest, listener);
+            } else {
+                Toast.makeText(getBaseContext(), "密码与确认密码必须一致！", Toast.LENGTH_SHORT).show();
+            }
         }
     };
 

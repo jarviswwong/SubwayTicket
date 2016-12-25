@@ -53,6 +53,7 @@ public class FragmentMain extends Fragment {
     private View originLayout, targetLayout;
     private TextView originText, targetText, ticketNum, ticketPay;
     private Button ticketAdd, ticketCut, bookTicket;
+    private FragmentTicketHistory fragmentTicketHistory;
 
     private String originStationName = "请选择", targetStationName = "请选择";  //记录用户选择
     private String tempPay = "0";
@@ -298,6 +299,8 @@ public class FragmentMain extends Fragment {
             if (what == 2) {
                 if (response.responseCode() == 200) {
                     circularProgressButton.setProgress(100);
+                    dialogPlus.dismiss();
+                    Toast.makeText(view.getContext(), "购票成功!", Toast.LENGTH_SHORT).show();
                 } else {
                     circularProgressButton.setProgress(-1);
                 }
@@ -364,7 +367,7 @@ public class FragmentMain extends Fragment {
 
         switch (id) {
             case R.id.action_infomation: {
-                Toast.makeText(getActivity().getBaseContext(), "ring here", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getBaseContext(), "消息功能还没写，别点啦！", Toast.LENGTH_SHORT).show();
             }
         }
 

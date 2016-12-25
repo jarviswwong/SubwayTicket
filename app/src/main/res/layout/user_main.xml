@@ -1,12 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="用户"
-        android:textSize="30sp" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorWhiteLight">
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edit_user_mobile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:hint="手机号码"
+            android:inputType="phone"
+            android:textSize="16sp"
+            app:met_clearButton="true"
+            app:met_hideUnderline="true"
+            app:met_iconLeft="@mipmap/mobile"
+            app:met_iconPadding="0dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorWhiteLight">
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edit_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:hint="昵称"
+            android:inputType="text"
+            android:textSize="16sp"
+            app:met_clearButton="true"
+            app:met_hideUnderline="true"
+            app:met_iconLeft="@mipmap/user"
+            app:met_iconPadding="0dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorWhiteLight">
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edit_user_introduction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:hint="个人简介"
+            android:inputType="textMultiLine"
+            android:textSize="16sp"
+            app:met_clearButton="true"
+            app:met_hideUnderline="true"
+            app:met_iconLeft="@mipmap/introduction"
+            app:met_iconPadding="0dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorWhiteLight">
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edit_user_pass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:hint="新密码"
+            android:inputType="textPassword"
+            android:textSize="16sp"
+            app:met_clearButton="true"
+            app:met_hideUnderline="true"
+            app:met_iconLeft="@mipmap/password"
+            app:met_iconPadding="0dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorWhiteLight">
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edit_user_checkPass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:hint="确认密码"
+            android:inputType="textPassword"
+            android:textSize="16sp"
+            app:met_clearButton="true"
+            app:met_hideUnderline="true"
+            app:met_iconLeft="@mipmap/confirm_pass"
+            app:met_iconPadding="0dp" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_userEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/design_book_button"
+        android:text="更改基本信息"
+        android:textColor="@color/colorWhiteLight"
+        android:textSize="16sp" />
+
 </LinearLayout>
