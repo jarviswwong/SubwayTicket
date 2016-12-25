@@ -40,16 +40,17 @@
     </RelativeLayout>
 
     <TableLayout
+        android:id="@+id/ticket_details_otherInfo_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/ticket_details_stationInfo_layout"
         android:layout_margin="10dp"
-        android:stretchColumns="0,1,2">
+        android:stretchColumns="1">
 
         <TableRow>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -85,7 +86,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -105,4 +106,21 @@
         </TableRow>
 
     </TableLayout>
+
+    <ImageView
+        android:id="@+id/QRcode"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_below="@id/ticket_details_otherInfo_layout"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/QRcode"
+        android:layout_centerInParent="true"
+        android:layout_margin="20dp"
+        android:text="兑换地铁票时请扫码或者输入兑换码" />
+
 </RelativeLayout>

@@ -2,6 +2,7 @@ package cn.mcavoy.www.subwayticket.Fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,12 +13,19 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.encoder.QRCode;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.ViewHolder;
 import com.victor.loading.rotate.RotateLoading;
@@ -28,7 +36,9 @@ import com.yolanda.nohttp.rest.Response;
 import com.yolanda.nohttp.rest.StringRequest;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.mcavoy.www.subwayticket.Adapter.TicketListAdapter;
 import cn.mcavoy.www.subwayticket.Application.MetroApplication;
@@ -39,7 +49,6 @@ import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
-
 
 public class TicketHistoryNoTravel extends Fragment {
 
@@ -55,6 +64,7 @@ public class TicketHistoryNoTravel extends Fragment {
     private PtrClassicFrameLayout ptrClassicFrameLayout;
     private DialogPlus ticketDetailsDialog;
     private TextView details_oStationName, details_tStationName, details_price, details_number, details_date;
+    private ImageView qrCodeImage;
 
     @Nullable
     @Override
@@ -165,15 +175,42 @@ public class TicketHistoryNoTravel extends Fragment {
         ticketListAdapter.setmOnItemClickListener(new TicketListAdapter.OnRecyclerViewItemListener() {
             @Override
             public void onItemClick(View view, TicketModel.TicketsEntity ticketsEntity) {
-                //Toast.makeText(view.getContext(), "点击" + ticketsEntity.getId(), Toast.LENGTH_SHORT).show();
                 details_oStationName.setText(ticketsEntity.getoStationName());
                 details_tStationName.setText(ticketsEntity.gettStationName());
                 details_price.setText(ticketsEntity.getTicketPrice() + ".00");
                 details_number.setText(ticketsEntity.getTicketNum());
                 details_date.setText(ticketsEntity.getPayDate());
+                //生成二维码暂时规则（唯一id,归属id,日期和状态中间用|隔开）
+                Bitmap bitmap = generateBitmap(ticketsEntity.getId() + "|" + ticketsEntity.getOwnerId() + "|" + ticketsEntity.getPayDate() +
+                        "|" + ticketsEntity.getTicketStatus(), 200, 200);
+                qrCodeImage.setImageBitmap(bitmap);
                 ticketDetailsDialog.show();
             }
         });
+    }
+
+    //二维码创造类
+    private Bitmap generateBitmap(String content, int width, int height) {
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        Map<EncodeHintType, String> hints = new HashMap<>();
+        hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
+        try {
+            BitMatrix encode = qrCodeWriter.encode(content, BarcodeFormat.QR_CODE, width, height, hints);
+            int[] pixels = new int[width * height];
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    if (encode.get(j, i)) {
+                        pixels[i * width + j] = 0x00000000;
+                    } else {
+                        pixels[i * width + j] = 0xffffffff;
+                    }
+                }
+            }
+            return Bitmap.createBitmap(pixels, 0, width, width, height, Bitmap.Config.RGB_565);
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private void seperateLists(TicketModel model) {
@@ -208,6 +245,7 @@ public class TicketHistoryNoTravel extends Fragment {
         details_price = (TextView) ticketDetailsView.findViewById(R.id.ticket_details_price);
         details_number = (TextView) ticketDetailsView.findViewById(R.id.ticket_details_number);
         details_date = (TextView) ticketDetailsView.findViewById(R.id.ticket_details_payDate);
+        qrCodeImage = (ImageView) ticketDetailsView.findViewById(R.id.QRcode);
     }
 
     @Override
