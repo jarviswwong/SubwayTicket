@@ -2,19 +2,24 @@ package cn.mcavoy.www.subwayticket.Fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.orhanobut.dialogplus.DialogPlus;
+import com.orhanobut.dialogplus.ViewHolder;
 import com.victor.loading.rotate.RotateLoading;
 import com.yolanda.nohttp.error.TimeoutError;
 import com.yolanda.nohttp.rest.OnResponseListener;
@@ -48,6 +53,8 @@ public class TicketHistoryNoTravel extends Fragment {
     private RelativeLayout noDateView;
     private RotateLoading rotateLoading;
     private PtrClassicFrameLayout ptrClassicFrameLayout;
+    private DialogPlus ticketDetailsDialog;
+    private TextView details_oStationName, details_tStationName, details_price, details_number, details_date;
 
     @Nullable
     @Override
@@ -75,6 +82,9 @@ public class TicketHistoryNoTravel extends Fragment {
                 }, 1800);
             }
         });
+
+        //初始化订单细节布局
+        startTicketDetials();
         return view;
     }
 
@@ -89,10 +99,6 @@ public class TicketHistoryNoTravel extends Fragment {
         } else {
 
         }
-//        String tempData =
-//                "[{\"id\":\"201602044568\",\"ownerId\":\"1\",\"oStationName\":\"火车东站\"," +
-//                        "\"tStationName\":\"近江\",\"ticketNum\":\"1\"," +
-//                        "\"ticketPrice\":\"4\",\"ticketStatus\":\"未出行\",\"payDate\":\"2016-12-23\"}]";
     }
 
     OnResponseListener listener = new OnResponseListener() {
@@ -159,7 +165,13 @@ public class TicketHistoryNoTravel extends Fragment {
         ticketListAdapter.setmOnItemClickListener(new TicketListAdapter.OnRecyclerViewItemListener() {
             @Override
             public void onItemClick(View view, TicketModel.TicketsEntity ticketsEntity) {
-                Toast.makeText(view.getContext(), "点击" + ticketsEntity.getId(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(view.getContext(), "点击" + ticketsEntity.getId(), Toast.LENGTH_SHORT).show();
+                details_oStationName.setText(ticketsEntity.getoStationName());
+                details_tStationName.setText(ticketsEntity.gettStationName());
+                details_price.setText(ticketsEntity.getTicketPrice() + ".00");
+                details_number.setText(ticketsEntity.getTicketNum());
+                details_date.setText(ticketsEntity.getPayDate());
+                ticketDetailsDialog.show();
             }
         });
     }
@@ -182,6 +194,20 @@ public class TicketHistoryNoTravel extends Fragment {
             }
             mAlllists.addAll(mlists);
         }
+    }
+
+    private void startTicketDetials() {
+        ticketDetailsDialog = DialogPlus.newDialog(view.getContext())
+                .setContentHolder(new ViewHolder(R.layout.dialog_ticket_details))
+                .setGravity(Gravity.CENTER)
+                .setCancelable(true)
+                .create();
+        View ticketDetailsView = ticketDetailsDialog.getHolderView();
+        details_oStationName = (TextView) ticketDetailsView.findViewById(R.id.ticket_details_oStationName);
+        details_tStationName = (TextView) ticketDetailsView.findViewById(R.id.ticket_details_tStationName);
+        details_price = (TextView) ticketDetailsView.findViewById(R.id.ticket_details_price);
+        details_number = (TextView) ticketDetailsView.findViewById(R.id.ticket_details_number);
+        details_date = (TextView) ticketDetailsView.findViewById(R.id.ticket_details_payDate);
     }
 
     @Override

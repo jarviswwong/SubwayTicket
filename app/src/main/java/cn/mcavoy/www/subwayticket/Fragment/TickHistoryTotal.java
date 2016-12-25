@@ -153,7 +153,7 @@ public class TickHistoryTotal extends Fragment {
         ticketListAdapter.setmOnItemClickListener(new TicketListAdapter.OnRecyclerViewItemListener() {
             @Override
             public void onItemClick(View view, TicketModel.TicketsEntity ticketsEntity) {
-                Toast.makeText(view.getContext(), "点击" + ticketsEntity.getId(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(view.getContext(), "点击" + ticketsEntity.getId(), Toast.LENGTH_SHORT).show();
             }
         });
     }
