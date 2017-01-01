@@ -30,11 +30,11 @@ import cn.mcavoy.www.subwayticket.Model.UserModel;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private FragmentMain fragmentMain;
-    private FragmentUserSetting fragmentUserSetting;
-    private FragmentTicketHistory fragmentTicketHistory;
+    public static FragmentMain fragmentMain;
+    public static FragmentUserSetting fragmentUserSetting;
+    public static FragmentTicketHistory fragmentTicketHistory;
 
-    private Fragment isFragment; //记录当前的fragment
+    public static Fragment isFragment; //记录当前的fragment
 
     private Toolbar toolbar;
 
@@ -68,6 +68,11 @@ public class MainActivity extends AppCompatActivity
         navUserName.setText(MetroApplication.userModel.getName().toString());
         navUserEmail = (TextView) navHeader.findViewById(R.id.nav_useremail);
         navUserEmail.setText(MetroApplication.userModel.getEmail().toString());
+
+        //将三个子页面提前初始化
+        fragmentMain = new FragmentMain();
+        fragmentTicketHistory = new FragmentTicketHistory();
+        fragmentUserSetting = new FragmentUserSetting();
 
         setDefaultFragment(savedInstanceState);
     }
@@ -104,22 +109,16 @@ public class MainActivity extends AppCompatActivity
         switch (id) {
             case R.id.nav_index: {
                 toolbar.setTitle("首页");
-                if (fragmentMain == null)
-                    fragmentMain = new FragmentMain();
                 switchContent(isFragment, fragmentMain);
                 break;
             }
             case R.id.nav_purchase_history: {
                 toolbar.setTitle("购票记录");
-                if (fragmentTicketHistory == null)
-                    fragmentTicketHistory = new FragmentTicketHistory();
                 switchContent(isFragment, fragmentTicketHistory);
                 break;
             }
             case R.id.nav_user: {
                 toolbar.setTitle("账户设置");
-                if (fragmentUserSetting == null)
-                    fragmentUserSetting = new FragmentUserSetting();
                 switchContent(isFragment, fragmentUserSetting);
                 break;
             }

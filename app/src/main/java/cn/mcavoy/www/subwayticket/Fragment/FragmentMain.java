@@ -4,10 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.Toolbar;
 import android.telecom.Call;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -40,9 +43,14 @@ import com.yolanda.nohttp.rest.StringRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 import cn.mcavoy.www.subwayticket.Application.MetroApplication;
 import cn.mcavoy.www.subwayticket.CallServer;
+import cn.mcavoy.www.subwayticket.MainActivity;
 import cn.mcavoy.www.subwayticket.R;
 import cn.mcavoy.www.subwayticket.StationListActivity;
 
@@ -62,10 +70,17 @@ public class FragmentMain extends Fragment {
     private CircularProgressButton circularProgressButton;
     private DialogPlus dialogPlus;
 
+    private Fragment fragment;
+    private NavigationView navigationView;
+    private Toolbar toolbar;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.content_main, container, false);
+        fragment = this;  //当前fragment
+        navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
+        toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
 
         originLayout = view.findViewById(R.id.content_main_originLayout);
         targetLayout = view.findViewById(R.id.content_main_targetLayout);
@@ -260,6 +275,32 @@ public class FragmentMain extends Fragment {
         }
     };
 
+    public void returnToTicketHistory() {
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            public void run() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialogPlus.dismiss();
+                        navigationView.getMenu().getItem(1).setChecked(true);
+                        toolbar.setTitle("购票记录");
+                        FragmentManager fm = getFragmentManager();
+                        FragmentTransaction ft = fm.beginTransaction();
+                        if (!MainActivity.fragmentTicketHistory.isAdded()) {
+                            ft.hide(fragment).add(R.id.fragment_layout, MainActivity.fragmentTicketHistory).commit();
+                        } else {
+                            ft.hide(fragment).show(MainActivity.fragmentTicketHistory).commit();
+                        }
+                        MainActivity.isFragment = MainActivity.fragmentTicketHistory;
+                        TicketHistoryNoTravel.autorefresh();
+                    }
+                });
+            }
+        };
+        timer.schedule(task, 2000);
+    }
+
     private void getStationList() {
         Request<String> listRequest = new StringRequest(MetroApplication.getStationApi);
         listRequest.setCacheMode(REQUEST_NETWORK_FAILED_READ_CACHE);
@@ -299,8 +340,8 @@ public class FragmentMain extends Fragment {
             if (what == 2) {
                 if (response.responseCode() == 200) {
                     circularProgressButton.setProgress(100);
-                    dialogPlus.dismiss();
-                    Toast.makeText(view.getContext(), "购票成功!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(view.getContext(), "购票成功！正在跳转到订单界面...", Toast.LENGTH_SHORT).show();
+                    returnToTicketHistory();
                 } else {
                     circularProgressButton.setProgress(-1);
                 }
@@ -330,6 +371,7 @@ public class FragmentMain extends Fragment {
 
         }
     };
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

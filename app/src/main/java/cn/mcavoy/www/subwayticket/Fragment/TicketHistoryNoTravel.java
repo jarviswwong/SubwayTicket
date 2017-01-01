@@ -61,10 +61,11 @@ public class TicketHistoryNoTravel extends Fragment {
     private View view;
     private RelativeLayout noDateView;
     private RotateLoading rotateLoading;
-    private PtrClassicFrameLayout ptrClassicFrameLayout;
     private DialogPlus ticketDetailsDialog;
     private TextView details_oStationName, details_tStationName, details_price, details_number, details_date;
     private ImageView qrCodeImage;
+
+    public static PtrClassicFrameLayout ptrClassicFrameLayout;
 
     @Nullable
     @Override
@@ -96,6 +97,20 @@ public class TicketHistoryNoTravel extends Fragment {
         //初始化订单细节布局
         startTicketDetials();
         return view;
+    }
+
+    //自动刷新界面
+    public static void autorefresh() {
+        if (ptrClassicFrameLayout != null) {
+            ptrClassicFrameLayout.autoRefresh();
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+
     }
 
     private void getDate() {

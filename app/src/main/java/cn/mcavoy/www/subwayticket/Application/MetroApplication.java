@@ -33,7 +33,7 @@ import cn.mcavoy.www.subwayticket.Model.UserModel;
 public class MetroApplication extends Application {
     private SharedPreferences sp;
     private SharedPreferences.Editor editor;
-    public static String Domain = "http://10.0.2.2";
+    public static String Domain = "http://115.159.82.59";
     public static String getUserApi = Domain + "/api/user";
     public static String getTokenApi = Domain + "/oauth/token";
     public static String getStationApi = Domain + "/api/stations";

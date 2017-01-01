@@ -114,7 +114,7 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(getBaseContext(), "注册成功!", Toast.LENGTH_SHORT).show();
                     InterfaceToLogin();
                 } else {
-                    Toast.makeText(getBaseContext(), "注册成功!请重新注册!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "注册失败！该用户名或者手机号已经被注册！", Toast.LENGTH_SHORT).show();
                 }
             }
         }
