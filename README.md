@@ -9,49 +9,39 @@
 * 用Laravel写的后台服务端作为数据交互
 * 对用户认证功能设计了基于OAuth2协议的认证（测试）。
 
----
-
 ## 登录与注册
 
-![](https://cdn.imcavoy.com/images/20200305200755.png)
+<img src="https://cdn.imcavoy.com/images/20200305200755.png" width="375" />
 
-![](https://cdn.imcavoy.com/images/20200305200900.png)
+<img src="https://cdn.imcavoy.com/images/20200305200900.png" width="375" />
 
-![](https://cdn.imcavoy.com/images/20200305201000.png)
-***
+<img src="https://cdn.imcavoy.com/images/20200305201000.png" width="375" />
 
 ## 首页
 
-![](https://cdn.imcavoy.com/images/20200305201047.png)
-***
+<img src="https://cdn.imcavoy.com/images/20200305201047.png" width="375" />
 
 ## 选地铁站点
 
-![](https://cdn.imcavoy.com/images/20200305201137.png)
+<img src="https://cdn.imcavoy.com/images/20200305201137.png" width="375" />
 
-![](https://cdn.imcavoy.com/images/20200305201205.png)
-***
+<img src="https://cdn.imcavoy.com/images/20200305201205.png" width="375" />
 
 ## 购票操作
+<img src="https://cdn.imcavoy.com/images/20200305201240.png" width="375" />
 
-![](https://cdn.imcavoy.com/images/20200305201240.png)
-
-![](https://cdn.imcavoy.com/images/20200305201307.png)
-
-***
+<img src="https://cdn.imcavoy.com/images/20200305201307.png" width="375" />
 
 ## 购票记录
+<img src="https://cdn.imcavoy.com/images/20200305201356.png" width="375" />
 
-![](https://cdn.imcavoy.com/images/20200305201356.png)
+<img src="https://cdn.imcavoy.com/images/20200305201420.png" width="375" />
 
-![](https://cdn.imcavoy.com/images/20200305201420.png)
+<img src="https://cdn.imcavoy.com/images/20200305201439.png" width="375" />
 
-![](https://cdn.imcavoy.com/images/20200305201439.png)
-
-![](https://cdn.imcavoy.com/images/20200305201506.png)
-
-***
+<img src="https://cdn.imcavoy.com/images/20200305201506.png" width="375" />
 
 ## 用户信息
 
-![](https://cdn.imcavoy.com/images/20200305201608.png)
+<img src="https://cdn.imcavoy.com/images/20200305201608.png" width="375" />
+
